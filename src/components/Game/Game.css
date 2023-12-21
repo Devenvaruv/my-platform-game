@@ -1,0 +1,16 @@
+body, html, p {
+    margin: 0;
+    padding: 0;
+    /* This ensures that the body takes the full viewport */
+    width: 100%;
+    height: 100%;
+    /* This removes the scroll */
+    /* overflow: hidden; */
+  }
+/* 
+div{
+    position: 'relative'; 
+    width: 100%;
+    height: 100%; 
+    border: '10px solid red';
+}   */
