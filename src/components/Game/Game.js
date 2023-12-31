@@ -2,24 +2,33 @@ import React, { useState, useEffect } from 'react';
 import './Game.css'
 import Ladder from '../Ladder/Ladder';
 
+
 const Game = () => {
-  
-  const borderWidth = 5; // not sure about this
+
   const [gameSize, setGameSize] = useState({ width: document.documentElement.clientWidth, height: document.documentElement.clientHeight * 3 });
   const screenHeight = document.documentElement.clientHeight; // 729.60 px // 1536 px
+  const widhtP = (x) => {
+    return gameSize.width * x / 100;
+  }
+  const heightP = (y) => screenHeight * y / 100;
+  const pThick = heightP(0.6);
+  const borderWidth = 5; // not sure about this
   const page3 = 0;
   const page2 = document.documentElement.clientHeight;
   const page1 = document.documentElement.clientHeight * 2;
   const gravity = 5;
-  let [boolt, setBoolt] = useState(true); // test need to change
+  const [boolt, setBoolt] = useState(true); // test need to change
   const [isOnPage2, setIsOnPage2] = useState(true); // test need 
   const playerWidth = 20;// need to decide how much
   const playerHeight = 20;
   const [playerX, setPlayerX] = useState(5);
   const [playerY, setPlayerY] = useState(page1 + screenHeight * 89.75 / 100 + 5);
-  const [player2X, setPlayer2X] = useState(gameSize.width*97/100);
+  const [player2X, setPlayer2X] = useState(gameSize.width * 97 / 100);
   const [player2Y, setPlayer2Y] = useState(page2 + screenHeight * 95 / 100);
-  
+  const [lightSwitch, setLightSwitch] = useState(false);
+  const [playerOneButton, setPlayerOneButton] = useState(false);
+  const [playerTwoButton, setPlayerTwoButton] = useState(false);
+  const [timer, setTimer] = useState(null);
   const [moveDirection, setMoveDirection] = useState(null);
 
   useEffect(() => {
@@ -103,15 +112,15 @@ const Game = () => {
     { x: gameSize.width * 90 / 100, y: 0, width: 1, height: screenHeight * 3 },
   ]
 
-  const widhtP = (x) => {
-    return gameSize.width * x / 100;
-  }
-  const heightP = (y) => screenHeight * y / 100;
+
 
   const intObjects = [
-    { x: 0, y: page1 + 5, width: widhtP(3.25), height: screenHeight * 10 / 100 - 5 },
-    { x: widhtP(18.5), y: page2 + heightP(40) + 5, width: 5, height: 5 },
-    { x: widhtP(98.5), y: page2 + heightP(40) + 5, width: 5, height: 5 },
+    { x: 0, y: page1 + 5, width: widhtP(3.25), height: heightP(10) - 5 },//light switch 0
+    { x: widhtP(17.5), y: page2 + heightP(40) + 5, width: widhtP(2.5), height: heightP(5) }, //playerone button 1
+    { x: widhtP(97.5), y: page2 + heightP(40) + 5,  width: widhtP(2.5), height: heightP(5)}, // playertwo button 
+    { x: widhtP(22.5), y: page2 + 5, width: widhtP(0.3), height: heightP(7.5) - 5 }, // door 1
+    { x: widhtP(77.2), y: page2 + 5, width: widhtP(0.3), height: heightP(7.5) - 5 }, // door 2
+
   ]
 
   const teleporters = [
@@ -122,16 +131,26 @@ const Game = () => {
     // page no 1
 
     { x: 0, y: page1, width: gameSize.width, height: 5 },// base
-    { x: 0, y: page1 + screenHeight * 90 / 100, width: gameSize.width * 75 / 100, height: 5 }, // header part 1
+    { x: 0, y: page1 + screenHeight * 90 / 100, width: gameSize.width * 75 / 100, height: pThick }, // header part 1
     { x: gameSize.width * 77.5 / 100, y: page1 + screenHeight * 90 / 100, width: gameSize.width * 22.5 / 100, height: 5 }, // header part 2
     { x: gameSize.width * 70 / 100, y: page1 + screenHeight * 60 / 100, width: gameSize.width * 30 / 100, height: 5 }, // ladder base
 
     // page no 2
     { x: 0, y: page2, width: gameSize.width, height: 5 },// base
     { x: 0, y: page2 + heightP(40), width: gameSize.width, height: 5 },
-    { x: widhtP(50), y: page2, width: 5, height: heightP(40) },
-    { x: widhtP(20), y: page2 + heightP(40), width: 5, height:heightP(60) },
+    // { x: widhtP(50), y: page2, width: 5, height: heightP(40) },
+    { x: widhtP(20), y: page2 + heightP(40), width: 5, height: heightP(60) },
     { x: widhtP(80), y: page2 + heightP(40), width: 5, height: heightP(60) },
+    { x: widhtP(22.5), y: page2 + heightP(7.5), width: widhtP(2.5), height: heightP(22.5) },
+    { x: widhtP(75), y: page2 + heightP(7.5), width: widhtP(2.5), height: heightP(22.5) },
+    { x: widhtP(25), y: page2 + heightP(7.5), width: widhtP(50), height: heightP(2.5) },
+    { x: widhtP(18.5), y: page2, width: widhtP(0.5), height: heightP(40) },
+    { x: widhtP(81), y: page2, width: widhtP(0.5), height: heightP(40) },
+
+    //page 2 seats
+    { x: widhtP(50), y: page2 + heightP(11), width: widhtP(0.2), height: heightP(3) },
+    { x: widhtP(53), y: page2 + heightP(11), width: widhtP(0.2), height: heightP(3) },
+    { x: widhtP(50), y: page2 + heightP(11), width: widhtP(3), height:widhtP(0.2) },
 
     // title space
     // { x: widhtP(2.5), y: page2 + heightP(90), width: widhtP(15), height: heightP(5) },
@@ -168,44 +187,45 @@ const Game = () => {
 
     { x: widhtP(0), y: page2 + heightP(95), width: widhtP(5), height: 5 },
     { x: widhtP(10), y: page2 + heightP(95), width: widhtP(5), height: 5 },
-    
-   // maze
-    //part 1
-    { x: widhtP(85), y: page2 + heightP(45), width: 5, height: heightP(5) },
-    { x: widhtP(85), y: page2 + heightP(70), width: 5, height: heightP(5) },
-    { x: widhtP(85), y: page2 + heightP(80), width: 5, height: heightP(5) },
-    { x: widhtP(85), y: page2 + heightP(90), width: 5, height: heightP(5) },
 
-    //part 2
-    { x: widhtP(90), y: page2 + heightP(50), width: 5, height: heightP(25) },
-    { x: widhtP(90), y: page2 + heightP(85), width: 5, height: heightP(5) },
-    
-    { x: widhtP(90), y: page2 + heightP(95), width: 5, height: heightP(5) },
-    // part3
-    { x: widhtP(95), y: page2 + heightP(55), width: 5, height: heightP(10) },
-    { x: widhtP(95), y: page2 + heightP(75), width: 5, height: heightP(5) },
-    { x: widhtP(95), y: page2 + heightP(90), width: 5, height: heightP(5) },
+    // maze
+    // part 1
+    { x: widhtP(85), y: page2 + heightP(45), width: pThick, height: heightP(5) },
+    { x: widhtP(85), y: page2 + heightP(70), width: pThick, height: heightP(5) },
+    { x: widhtP(85), y: page2 + heightP(80), width: pThick, height: heightP(5) },
+    { x: widhtP(85), y: page2 + heightP(90), width: pThick, height: heightP(5) },
 
-    // partx
-    { x: widhtP(90), y: page2 + heightP(45), width: widhtP(10), height: 5 },
-    { x: widhtP(85), y: page2 + heightP(50), width: widhtP(10), height: 5 },
-    { x: widhtP(85), y: page2 + heightP(55), width: widhtP(5), height: 5 },
-    { x: widhtP(95), y: page2 + heightP(55), width: widhtP(5), height: 5 },
+    // part 2
+    { x: widhtP(90), y: page2 + heightP(50), width: pThick, height: heightP(25) },
+    { x: widhtP(90), y: page2 + heightP(85), width: pThick, height: heightP(5) },
+    { x: widhtP(90), y: page2 + heightP(95), width: pThick, height: heightP(5) },
 
-    { x: widhtP(80), y: page2 + heightP(60), width: widhtP(5), height: 5 },
-    { x: widhtP(80), y: page2 + heightP(65), width: widhtP(10), height: 5 },
-    { x: widhtP(95), y: page2 + heightP(70), width: widhtP(5), height: 5 },
-    { x: widhtP(85), y: page2 + heightP(75), width: widhtP(5), height: 5 },
+    // part 3
+    { x: widhtP(95), y: page2 + heightP(55), width: pThick, height: heightP(10) },
+    { x: widhtP(95), y: page2 + heightP(75), width: pThick, height: heightP(5) },
+    { x: widhtP(95), y: page2 + heightP(90), width: pThick, height: heightP(5) },
 
-    { x: widhtP(85), y: page2 + heightP(80), width: widhtP(10), height: 5 },
-    { x: widhtP(80), y: page2 + heightP(85), width: widhtP(5), height: 5 },
-    { x: widhtP(90), y: page2 + heightP(85), width: widhtP(5), height: 5 },
-    { x: widhtP(85), y: page2 + heightP(90), width: widhtP(5), height: 5 },
+    // part x
+    { x: widhtP(90), y: page2 + heightP(45), width: widhtP(10), height: pThick },
+    { x: widhtP(85), y: page2 + heightP(50), width: widhtP(10), height: pThick },
+    { x: widhtP(85), y: page2 + heightP(55), width: widhtP(5), height: pThick },
+    { x: widhtP(95), y: page2 + heightP(55), width: widhtP(5), height: pThick },
 
-    { x: widhtP(80), y: page2 + heightP(95), width: widhtP(5), height: 5 },
-    { x: widhtP(90), y: page2 + heightP(95), width: widhtP(5), height: 5 },
+    { x: widhtP(80), y: page2 + heightP(60), width: widhtP(5), height: pThick },
+    { x: widhtP(80), y: page2 + heightP(65), width: widhtP(10), height: pThick },
+    { x: widhtP(95), y: page2 + heightP(70), width: widhtP(5), height: pThick },
+    { x: widhtP(85), y: page2 + heightP(75), width: widhtP(5), height: pThick },
 
-   
+    { x: widhtP(85), y: page2 + heightP(80), width: widhtP(10), height: pThick },
+    { x: widhtP(80), y: page2 + heightP(85), width: widhtP(5), height: pThick },
+    { x: widhtP(90), y: page2 + heightP(85), width: widhtP(5), height: pThick },
+    { x: widhtP(85), y: page2 + heightP(90), width: widhtP(5), height: pThick },
+
+    { x: widhtP(80), y: page2 + heightP(95), width: widhtP(5), height: pThick },
+    { x: widhtP(90), y: page2 + heightP(95), width: widhtP(5), height: pThick },
+
+
+
 
 
 
@@ -246,11 +266,39 @@ const Game = () => {
     };
   }, []);
 
-  const scrollDown = () => {
+  const scrollOnePage = () => {
     window.scrollBy({
-      top: page2, // Scroll down 1000 pixels
+      top: page2, // Scroll down by one page// page2
       behavior: 'smooth' // Optional: for smooth scrolling
     });
+  };
+
+  const checkInteractions = () => {
+    // Assuming playerWidth and playerHeight define the size of the player
+    const playerRight = playerX + playerWidth;
+    const playerBottom = playerY - playerHeight; // Assuming Y increases downwards
+
+    if ((playerRight >= intObjects[0].x && playerX <= intObjects[0].x + intObjects[0].width &&
+      playerBottom <= intObjects[0].y && playerY >= intObjects[0].y - intObjects[0].height) && !lightSwitch) {
+        // optional change the img or add annimations
+      setLightSwitch(true);
+      scrollOnePage();
+
+      setPlayerX(0);
+      setPlayerY(page2 + screenHeight - 40);
+
+    }
+    if ((playerRight >= intObjects[1].x && playerX <= intObjects[1].x + intObjects[1].width &&
+      playerBottom <= intObjects[1].y && playerY >= intObjects[1].y - intObjects[1].height) && !playerOneButton) {
+      setPlayerOneButton(true);
+    }
+
+    if ((player2X + playerWidth >= intObjects[2].x && player2X <= intObjects[2].x + intObjects[2].width &&
+      player2Y - playerHeight <= intObjects[2].y && player2Y >= intObjects[2].y - intObjects[2].height) && !playerTwoButton) {
+      setPlayerTwoButton(true);
+    }
+
+
   };
 
   const updateGame = () => {
@@ -260,26 +308,26 @@ const Game = () => {
     let new2X = player2X;
     let new2Y = player2Y;
 
-  switch (moveDirection) {
-    case 'ArrowLeft':
-      newX = Math.max(borderWidth, playerX - 10);
-      new2X = Math.min(gameSize.width - playerWidth - borderWidth * 2, player2X + 10);
-      break;
-    case 'ArrowRight':
-      newX = Math.min(gameSize.width - playerWidth - borderWidth * 2, playerX + 10);
-      new2X = Math.max(borderWidth, player2X - 10);
-      break;
-    case 'ArrowDown':
-      newY = Math.max(borderWidth, playerY - 10);
-      new2Y = Math.min(gameSize.height - playerHeight - borderWidth * 2, player2Y + 10);
-      break;
-    case 'ArrowUp':
-      newY = Math.min(gameSize.height - playerHeight - borderWidth * 2, playerY + 10);
-      new2Y = Math.max(borderWidth, player2Y - 10);
-      break;
-    default:
-      break;
-  }
+    switch (moveDirection) {
+      case 'ArrowLeft':
+        newX = Math.max(borderWidth, playerX - 10);
+        new2X = Math.min(gameSize.width - playerWidth - borderWidth * 2, player2X + 10);
+        break;
+      case 'ArrowRight':
+        newX = Math.min(gameSize.width - playerWidth - borderWidth * 2, playerX + 10);
+        new2X = Math.max(borderWidth, player2X - 10);
+        break;
+      case 'ArrowDown':
+        newY = Math.max(borderWidth, playerY - 10);
+        new2Y = Math.min(gameSize.height - playerHeight - borderWidth * 2, player2Y + 10);
+        break;
+      case 'ArrowUp':
+        newY = Math.min(gameSize.height - playerHeight - borderWidth * 2, playerY + 10);
+        new2Y = Math.max(borderWidth, player2Y - 10);
+        break;
+      default:
+        break;
+    }
 
     const onPlatform1 = platforms.some(platform => {
       return (
@@ -294,8 +342,8 @@ const Game = () => {
       setPlayerX(newX);
       setPlayerY(newY);
     }
-    
-    
+
+
     const onPlatform2 = platforms.some(platform => {
       return (
         new2X < platform.x + platform.width &&
@@ -304,7 +352,7 @@ const Game = () => {
         new2Y + playerHeight > platform.y
       );
     });
-  
+
     if (!onPlatform2) {
       setPlayer2X(new2X);
       setPlayer2Y(new2Y);
@@ -321,46 +369,67 @@ const Game = () => {
     if (!onPlatformVertically && moveDirection === 'ArrowDown') {
       setPlayerY(newY);
     }
-    console.log('dev' ,playerY)
-    console.log('page1', page1)
-    console.log('page2', page2)
-    if (playerY > page1){ // test
-     
 
+    if (playerY > page1) { // only allows gravity if player is on page1
       applyGravity();
     }
+
     
-    if (
-      playerX >= (gameSize.width * 5 / 100) && // x position of the platform
-      playerX <= (gameSize.width * 5 / 100) + (gameSize.width * 2 / 100) && // x position + width of the platform
-      playerY >= (page1 + 5) && // y position of the platform
-      playerY <= (page1 + 5) + (screenHeight * 5 / 100 - 5) // y position + height of the platform
-    ) {
-      console.log("DED");
 
-    }
 
-    if (playerX >= 100 && boolt === true) {
+
+    if (playerX >= 100 && boolt === true) { // hardcoded will change it later
       setBoolt(false);
-      scrollDown();
-      
+      scrollOnePage();
+
       setPlayerX(0);
       setPlayerY(page2 + screenHeight - 40);
-      
+
     }
-    // Other game update logic if needed...
-    // if (newX >= 100) {
-    //   scrollToBottom();
-    // }
+   
+    checkInteractions();
   };
 
   useEffect(() => {
-    const gameLoop = setInterval(updateGame, 100); // Adjust interval as needed
+    const gameLoop = setInterval(updateGame, 10); // Adjust interval as needed
 
     return () => {
       clearInterval(gameLoop);
     };
   }, [playerX, playerY, moveDirection, gameSize, borderWidth, playerWidth, playerHeight]);
+
+  const checkButtonsAndAct = () => {
+    if (playerOneButton && playerTwoButton) {
+      // Do something immediately if both buttons are true
+      
+      setPlayerX(0);
+      setPlayerY(0);
+      setPlayer2X(10);
+      setPlayer2Y(10);
+      // Clear any existing timer
+      clearTimeout(timer);
+      setTimer(null);
+    } else if (!timer) {
+      // Start a timer only if it's not already running
+      const newTimer = setTimeout(() => {
+        // Reset both buttons after 3 seconds if not already true
+        setPlayerOneButton(false);
+        setPlayerTwoButton(false);
+      }, 3000);
+
+      setTimer(newTimer);
+    }
+  };
+
+
+  useEffect(() => {
+    checkButtonsAndAct();
+
+    return () => {
+      // Clear the timer when the component is unmounted or any button state changes
+      clearTimeout(timer);
+    };
+  }, [playerOneButton, playerTwoButton]);
 
 
 
@@ -368,13 +437,14 @@ const Game = () => {
 
   const applyGravity = () => {
     let newY = playerY - gravity; // The player moves down due to gravity
-    const onPlatformn = platforms.some(platform => {
+
+    const onPlatformn = platforms.some(platform => { //checks if platform
       const withinXBounds = playerX < platform.x + platform.width && playerX + playerWidth > platform.x;
       const landedOnTop = newY < platform.y + platform.height && newY + playerHeight > platform.y;
       return withinXBounds && landedOnTop;
     });
 
-    const onLadder = ladders.some(ladder => {
+    const onLadder = ladders.some(ladder => { // checks if ladder
       const withinXBounds = playerX < ladder.x + ladder.width && playerX + playerWidth > ladder.x;
       const withinYBounds = playerY < ladder.y + ladder.height && playerY + playerHeight > ladder.y;
       return withinXBounds && withinYBounds;
@@ -389,22 +459,22 @@ const Game = () => {
     newY = Math.max(borderWidth, newY); // prevent falling through border
 
     if (!onPlatformn) {
-      setPlayerY(newY);
+      setPlayerY(newY); // applys gravity
     }
 
   };
 
   return (
     <div className='no-scrollbar' style={{ width: gameSize.width, height: gameSize.height }}>
-      {graphs.map((platform, index) => (
+      {graphs.map((graph, index) => (
         <div
           key={index}
           style={{
             position: 'absolute',
-            left: `${platform.x}px`,
-            bottom: `${platform.y}px`,
-            width: `${platform.width}px`,
-            height: `${platform.height}px`,
+            left: `${graph.x}px`,
+            bottom: `${graph.y}px`,
+            width: `${graph.width}px`,
+            height: `${graph.height}px`,
             backgroundColor: 'black',
           }}
         />
@@ -439,8 +509,8 @@ const Game = () => {
           position: 'absolute',
           left: `${player2X}px`,
           bottom: `${player2Y}px`,
-          width: playerWidth,
-          height: playerHeight,
+          width: widhtP(1.6),
+          height: widhtP(1.6),
         }}
       />}
       {platforms.map((platform, index) => (
@@ -456,29 +526,29 @@ const Game = () => {
           }}
         />
       ))}
-      
-      {intObjects.map((platform, index) => (
+
+      {intObjects.map((intObject, index) => (
         <div
           key={index}
           style={{
             position: 'absolute',
-            left: `${platform.x}px`,
-            bottom: `${platform.y}px`,
-            width: `${platform.width}px`,
-            height: `${platform.height}px`,
+            left: `${intObject.x}px`,
+            bottom: `${intObject.y}px`,
+            width: `${intObject.width}px`,
+            height: `${intObject.height}px`,
             backgroundColor: 'yellow',
           }}
         />
       ))}
-      {teleporters.map((platform, index) => (
+      {teleporters.map((teleporter, index) => (
         <div
           key={index}
           style={{
             position: 'absolute',
-            left: `${platform.x}px`,
-            bottom: `${platform.y}px`,
-            width: `${platform.width}px`,
-            height: `${platform.height}px`,
+            left: `${teleporter.x}px`,
+            bottom: `${teleporter.y}px`,
+            width: `${teleporter.width}px`,
+            height: `${teleporter.height}px`,
             backgroundColor: 'blue',
           }}
         />
@@ -486,6 +556,16 @@ const Game = () => {
       {ladders.map((ladder, index) => (
         <Ladder key={index} {...ladder} />
       ))}
+      {/* <p
+          
+          style={{
+            position: 'absolute',
+          left: `${player2X}px`,
+          bottom: `${player2Y}px`,
+          width: widhtP(1.6),
+          height: widhtP(1.6),
+          }}
+        > test</p> */}
 
     </div>
   );
@@ -505,4 +585,7 @@ export default Game;
 
 // staircase: x= 2nd unit
 
-// to do for tomorrow: make page2 maze 
+// to do for tomorrow: make page2 maze
+
+
+// tmr make the yellow button finctional and make a seat for the player done
