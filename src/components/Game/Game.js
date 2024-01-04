@@ -21,8 +21,8 @@ const Game = () => {
   const [isOnPage2, setIsOnPage2] = useState(true); // test need 
   const playerWidth = 20;// need to decide how much
   const playerHeight = 20;
-  const [playerX, setPlayerX] = useState(5);
-  const [playerY, setPlayerY] = useState(page1 + screenHeight * 89.75 / 100 + 5);
+  const [playerX, setPlayerX] = useState(widhtP(50));
+  const [playerY, setPlayerY] = useState(page1 + heightP(99));
   const [player2X, setPlayer2X] = useState(gameSize.width * 97 / 100);
   const [player2Y, setPlayer2Y] = useState(page2 + screenHeight * 95 / 100);
   const [lightSwitch, setLightSwitch] = useState(false);
@@ -30,6 +30,28 @@ const Game = () => {
   const [playerTwoButton, setPlayerTwoButton] = useState(false);
   const [timer, setTimer] = useState(null);
   const [moveDirection, setMoveDirection] = useState(null);
+  const [flashlightOn, setFlashlightOn] = useState(true);
+  const [playerDirection, setPlayerDirection] = useState('right');
+
+  useEffect(() => {
+    const lightY = gameSize.height - playerY;
+   
+
+  // switch(playerDirection) {
+  //   case 'right':
+  //     clipPath = `polygon(0% 0%, 100% 50%, 0% 100%)`;
+  //     break;
+  //   case 'left':
+  //     clipPath = `polygon(0% 50%, 100% 0%, 100% 100%)`;
+  //     break;
+  //   // Add cases for 'up' and 'down' if needed
+  //   default:
+  //     clipPath = `polygon(0% 0%, 100% 50%, 0% 100%)`; // Default direction
+  // }
+    document.documentElement.style.setProperty('--lightX', `${playerX}px`);
+    document.documentElement.style.setProperty('--lightY', `${lightY}px`);
+    // document.documentElement.style.setProperty('--gradientAngle', clipPath);
+  }, [playerX, playerY, gameSize.height, playerDirection]);
 
   useEffect(() => {
     // need to add player resizes and position
@@ -138,7 +160,6 @@ const Game = () => {
     // page no 2
     { x: 0, y: page2, width: gameSize.width, height: 5 },// base
     { x: 0, y: page2 + heightP(40), width: gameSize.width, height: 5 },
-    // { x: widhtP(50), y: page2, width: 5, height: heightP(40) },
     { x: widhtP(20), y: page2 + heightP(40), width: 5, height: heightP(60) },
     { x: widhtP(80), y: page2 + heightP(40), width: 5, height: heightP(60) },
     { x: widhtP(22.5), y: page2 + heightP(7.5), width: widhtP(2.5), height: heightP(22.5) },
@@ -151,6 +172,11 @@ const Game = () => {
     { x: widhtP(50), y: page2 + heightP(11), width: widhtP(0.2), height: heightP(3) },
     { x: widhtP(53), y: page2 + heightP(11), width: widhtP(0.2), height: heightP(3) },
     { x: widhtP(50), y: page2 + heightP(11), width: widhtP(3), height:widhtP(0.2) },
+
+
+    //page no 3
+    { x: widhtP(5), y: page3 + heightP(30), width: widhtP(90), height:widhtP(0.3) },
+
 
     // title space
     // { x: widhtP(2.5), y: page2 + heightP(90), width: widhtP(15), height: heightP(5) },
@@ -249,7 +275,14 @@ const Game = () => {
         }
         setMoveDirection(e.key);
       }
+      if (e.key === 'ArrowLeft') {
+        setPlayerDirection('left');
+      } else if (e.key === 'ArrowRight') {
+        setPlayerDirection('right');
+      }
     };
+
+    
 
     const handleKeyUp = (e) => {
       if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
@@ -297,6 +330,20 @@ const Game = () => {
       player2Y - playerHeight <= intObjects[2].y && player2Y >= intObjects[2].y - intObjects[2].height) && !playerTwoButton) {
       setPlayerTwoButton(true);
     }
+   
+    if (playerRight >= intObjects[3].x && playerX <= intObjects[3].x + intObjects[3].width &&
+      playerBottom <= intObjects[3].y && playerY >= intObjects[3].y - intObjects[3].height) {
+      setPlayerX(widhtP(30));
+      setPlayerY(page3 + heightP(30));  
+      scrollOnePage();
+    }
+
+    if (playerRight >= intObjects[4].x && playerX <= intObjects[4].x + intObjects[4].width &&
+      playerBottom <= intObjects[4].y && playerY >= intObjects[4].y - intObjects[4].height) {
+        setPlayerX(widhtP(30));
+        setPlayerY(page3 + heightP(30));  
+        scrollOnePage();
+    }
 
 
   };
@@ -312,10 +359,12 @@ const Game = () => {
       case 'ArrowLeft':
         newX = Math.max(borderWidth, playerX - 10);
         new2X = Math.min(gameSize.width - playerWidth - borderWidth * 2, player2X + 10);
+       
         break;
       case 'ArrowRight':
         newX = Math.min(gameSize.width - playerWidth - borderWidth * 2, playerX + 10);
         new2X = Math.max(borderWidth, player2X - 10);
+       
         break;
       case 'ArrowDown':
         newY = Math.max(borderWidth, playerY - 10);
@@ -378,7 +427,7 @@ const Game = () => {
 
 
 
-    if (playerX >= 100 && boolt === true) { // hardcoded will change it later
+    if (playerX >= 10000 && boolt === true) { // hardcoded will change it later
       setBoolt(false);
       scrollOnePage();
 
@@ -402,10 +451,10 @@ const Game = () => {
     if (playerOneButton && playerTwoButton) {
       // Do something immediately if both buttons are true
       
-      setPlayerX(0);
-      setPlayerY(0);
-      setPlayer2X(10);
-      setPlayer2Y(10);
+      setPlayerX(widhtP(50));
+      setPlayerY(page2 + heightP(20));
+      setPlayer2X(widhtP(50));
+      setPlayer2Y(page1 + heightP(10));
       // Clear any existing timer
       clearTimeout(timer);
       setTimer(null);
@@ -464,8 +513,10 @@ const Game = () => {
 
   };
 
+
   return (
-    <div className='no-scrollbar' style={{ width: gameSize.width, height: gameSize.height }}>
+    <div className={'no-scrollbar flashlight-on darkness-layer'} style={{ width: gameSize.width, height: gameSize.height }}>
+    
       {graphs.map((graph, index) => (
         <div
           key={index}
@@ -491,7 +542,7 @@ const Game = () => {
         }}
       />
       <img
-        src='./temp.png' // Replace 'player-icon.png' with the path to your image
+        src='./temp.png' // project img
         alt='Player'
         style={{
           position: 'absolute',
@@ -501,6 +552,18 @@ const Game = () => {
           height: heightP(60),
         }}
       />
+      {/* <img
+        src='./ds.jpg' // background image to be added
+        alt='Playerx'
+        style={{
+          position: 'absolute',
+          left: widhtP(0),
+          bottom: page1 + heightP(0),
+          width: widhtP(100),
+          height: heightP(100),
+        }}
+      /> */}
+
 
       {isOnPage2 && <img
         src='https://i.pinimg.com/originals/9a/35/d6/9a35d6b50aaea74a80052640850d86d3.png' // Replace 'player-icon.png' with the path to your image
@@ -556,18 +619,25 @@ const Game = () => {
       {ladders.map((ladder, index) => (
         <Ladder key={index} {...ladder} />
       ))}
-      {/* <p
-          
-          style={{
-            position: 'absolute',
-          left: `${player2X}px`,
-          bottom: `${player2Y}px`,
-          width: widhtP(1.6),
-          height: widhtP(1.6),
-          }}
-        > test</p> */}
+      {/* <div className="directional-flashlight" style={{
+        position: 'absolute',
+        left:`${playerX + playerWidth/2}px`,
+        bottom: `${playerY - heightP(3.5)}px`,//found darkness-layer solution. hint bottom is without page1
+        width: widhtP(10),
+        height: heightP(10),
+      }}></div> */}
 
-    </div>
+      <p
+        style={{
+          position: 'absolute',
+          left: widhtP(30),
+          bottom: page3 + heightP(60),
+          width: widhtP(60),
+          height: widhtP(1.6),
+        }}
+      > Thank you so much for playing my game/viewing my portfolio/visiting my website/waisting your time</p>
+
+      </div>
   );
 };
 
@@ -589,3 +659,64 @@ export default Game;
 
 
 // tmr make the yellow button finctional and make a seat for the player done
+// make the door functional? done
+
+// make the website completely resposive
+// start drawing the game icons and logos
+// make the character spritesheet
+// add the standard website things such as headers and stuff
+// add layers to give the illusion of darkness
+
+
+
+// level 2
+// animations? 
+// add flashlight
+
+
+
+// to be used in future {/* <div class="lit-square" style={{
+        //   position: 'absolute',
+        //   left: widhtP(70),
+        //   bottom: heightP(30),
+        //   width: widhtP(56),
+        //   height: heightP(5),
+        // }}></div> */}
+
+      {/* <div class="permanent-light" style={{
+        position: 'absolute',
+        left: widhtP(70),// cool door effect. will use it for cinema doors uncrease width
+        bottom: heightP(30),
+        width: widhtP(5),
+        height: heightP(5),
+      }}></div> */}
+      {/* <div className="permanent-light" style={{
+        left: widhtP(60),
+        bottom: heightP(20),//found darkness-layer soulution. hint bottom is without page1
+        width: widhtP(1),
+        height: heightP(1),
+      }}></div>
+      <div className="permanent-light" style={{
+        left: widhtP(61),
+        bottom: heightP(20),//found darkness-layer soulution. hint bottom is without page1
+        width: widhtP(2),
+        height: heightP(2),
+      }}></div> */}
+      // <div className="permanent-light" style={{
+      //   position: "absolute",
+        
+      //   left:`${playerX}px`,
+      //   bottom: `${playerY}px`,//found darkness-layer soulution. hint bottom is without page1
+      //   width: widhtP(6),
+      //   height: heightP(15),
+      // }}></div>
+       
+     
+
+
+      {/* <div className='flashlight-beam'  style={{
+        left: widhtP(60),
+        bottom: heightP(20),//found darkness-layer soulution. hint bottom is without page1
+        width: widhtP(1),
+        height: heightP(1),
+      }}></div> */}

@@ -9,11 +9,6 @@ html{
     display: none;
   }
 }
-/* #root {
-  height: 100%;
-} */
-
-
 /* Hide scrollbar for IE, Edge and Firefox */
 .no-scrollbar {
   position: relative;
@@ -23,8 +18,50 @@ html{
   scrollbar-width: none;  
   overflow-y: auto; 
 } 
-
-
 .no-scrollbar::-webkit-scrollbar {
   display: none;
+}
+
+.lit-circle {
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(0, 0, 0, 0) 70%);
+  pointer-events: none;
+  z-index: 11; /* Adjust if needed to ensure it's above other elements */
+}
+
+.directional-flashlight {
+  position: absolute;
+  left: var(--lightX);
+  top: var(--lightY);
+  transform: translate(-50%, -50%); 
+  clip-path: polygon(0% 50%, 100% 0%, 100% 100%);
+  background: linear-gradient(to right, rgba(255, 255, 255, 0.6) 0%, rgba(0, 0, 0, 0) 100%);
+  border-radius: 50% / 70%; 
+  pointer-events: none;
+  z-index: 11;
+}
+
+.flashlight-on { /* change 0% to increase intensity of light*/
+  background: radial-gradient(circle at var(--lightX) var(--lightY), 
+              rgba(255, 255, 255, 0.9) 0%, 
+              rgba(0, 0, 0, 0.95) 10%);
+  
+} 
+.darkness-layer { /* this does not work. need to tweak*/
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.95); /* Adjust opacity as needed */
+  pointer-events: none; /* Ensures clicks pass through the layer */
+  z-index: 10; /* Ensure it's above the game, but below the UI elements */
+}
+/* Mask for darkness layer when flashlight is on */
+.flashlight-on .darkness-layer {
+  -webkit-mask-image: radial-gradient(circle at var(--lightX) var(--lightY), 
+                      transparent 0%, 
+                      black 10%, 
+                      black 100%);
+  mask-image: radial-gradient(circle at var(--lightX) var(--lightY), 
+              transparent 0%, 
+              black 10%, 
+              black 100%);
+  -webkit-mask-composite: destination-out;
+  mask-composite: exclude;
 }
