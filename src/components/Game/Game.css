@@ -25,26 +25,35 @@ html{
 .lit-circle {
   background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(0, 0, 0, 0) 70%);
   pointer-events: none;
-  z-index: 11; /* Adjust if needed to ensure it's above other elements */
+  z-index: 1; /* Adjust if needed to ensure it's above other elements */
 }
 
 .directional-flashlight {
-  position: absolute;
-  left: var(--lightX);
-  top: var(--lightY);
-  transform: translate(-50%, -50%); 
+  position: absolute; 
+  left: 10000px;/* used to despawn the light out og exsistence*/
   clip-path: polygon(0% 50%, 100% 0%, 100% 100%);
-  background: linear-gradient(to right, rgba(255, 255, 255, 0.6) 0%, rgba(0, 0, 0, 0) 100%);
+  background: linear-gradient(to right, rgba(255, 255, 255, 0.5) 0%, rgba(0, 0, 0, 0) 100%);
   border-radius: 50% / 70%; 
   pointer-events: none;
+  z-index: 100; /* remove this to create flashlight-beam */
+ 
+}
+
+.light-source {
+  position: absolute;
+  width: 200px; /* Adjust as needed */
+  height: 400px; /* Adjust as needed */
+  background: linear-gradient(to top, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.8) 100%);
+  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
   z-index: 11;
 }
+
 
 .flashlight-on { /* change 0% to increase intensity of light*/
   background: radial-gradient(circle at var(--lightX) var(--lightY), 
               rgba(255, 255, 255, 0.9) 0%, 
-              rgba(0, 0, 0, 0.95) 10%);
-  
+              rgba(0, 0, 0, 0.95) 0%);
+            
 } 
 .darkness-layer { /* this does not work. need to tweak*/
   position: absolute;
@@ -52,16 +61,14 @@ html{
   pointer-events: none; /* Ensures clicks pass through the layer */
   z-index: 10; /* Ensure it's above the game, but below the UI elements */
 }
-/* Mask for darkness layer when flashlight is on */
-.flashlight-on .darkness-layer {
-  -webkit-mask-image: radial-gradient(circle at var(--lightX) var(--lightY), 
-                      transparent 0%, 
-                      black 10%, 
-                      black 100%);
-  mask-image: radial-gradient(circle at var(--lightX) var(--lightY), 
-              transparent 0%, 
-              black 10%, 
-              black 100%);
-  -webkit-mask-composite: destination-out;
-  mask-composite: exclude;
+
+
+.flashlight-beam {
+  position: absolute;
+  clip-path: polygon(0% 50%, 100% 0%, 100% 100%);
+  border-radius: 50% / 70%; 
+  background: linear-gradient(to right, rgba(255, 255, 255, 0.9) 0%, rgba(0, 0, 0, 0) 100%);
+  pointer-events: none; 
+  
 }
+

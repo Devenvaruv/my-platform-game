@@ -4,12 +4,9 @@ import Ladder from '../Ladder/Ladder';
 
 
 const Game = () => {
-
   const [gameSize, setGameSize] = useState({ width: document.documentElement.clientWidth, height: document.documentElement.clientHeight * 3 });
   const screenHeight = document.documentElement.clientHeight; // 729.60 px // 1536 px
-  const widhtP = (x) => {
-    return gameSize.width * x / 100;
-  }
+  const widhtP = (x) => gameSize.width * x / 100;
   const heightP = (y) => screenHeight * y / 100;
   const pThick = heightP(0.6);
   const borderWidth = 5; // not sure about this
@@ -32,27 +29,17 @@ const Game = () => {
   const [moveDirection, setMoveDirection] = useState(null);
   const [flashlightOn, setFlashlightOn] = useState(true);
   const [playerDirection, setPlayerDirection] = useState('right');
+  const [styleTransform, setStyleTransform] = useState(-1);
+  const [flashlightDirection, setFlashlightDirection] = useState(25);
 
   useEffect(() => {
     const lightY = gameSize.height - playerY;
-   
 
-  // switch(playerDirection) {
-  //   case 'right':
-  //     clipPath = `polygon(0% 0%, 100% 50%, 0% 100%)`;
-  //     break;
-  //   case 'left':
-  //     clipPath = `polygon(0% 50%, 100% 0%, 100% 100%)`;
-  //     break;
-  //   // Add cases for 'up' and 'down' if needed
-  //   default:
-  //     clipPath = `polygon(0% 0%, 100% 50%, 0% 100%)`; // Default direction
-  // }
     document.documentElement.style.setProperty('--lightX', `${playerX}px`);
     document.documentElement.style.setProperty('--lightY', `${lightY}px`);
-    // document.documentElement.style.setProperty('--gradientAngle', clipPath);
+   
   }, [playerX, playerY, gameSize.height, playerDirection]);
-
+ 
   useEffect(() => {
     // need to add player resizes and position
     const handleResize = () => {
@@ -133,8 +120,6 @@ const Game = () => {
     { x: gameSize.width * 80 / 100, y: 0, width: 1, height: screenHeight * 3 },
     { x: gameSize.width * 90 / 100, y: 0, width: 1, height: screenHeight * 3 },
   ]
-
-
 
   const intObjects = [
     { x: 0, y: page1 + 5, width: widhtP(3.25), height: heightP(10) - 5 },//light switch 0
@@ -316,36 +301,29 @@ const Game = () => {
         // optional change the img or add annimations
       setLightSwitch(true);
       scrollOnePage();
-
       setPlayerX(0);
       setPlayerY(page2 + screenHeight - 40);
-
     }
     if ((playerRight >= intObjects[1].x && playerX <= intObjects[1].x + intObjects[1].width &&
       playerBottom <= intObjects[1].y && playerY >= intObjects[1].y - intObjects[1].height) && !playerOneButton) {
       setPlayerOneButton(true);
     }
-
     if ((player2X + playerWidth >= intObjects[2].x && player2X <= intObjects[2].x + intObjects[2].width &&
       player2Y - playerHeight <= intObjects[2].y && player2Y >= intObjects[2].y - intObjects[2].height) && !playerTwoButton) {
       setPlayerTwoButton(true);
     }
-   
     if (playerRight >= intObjects[3].x && playerX <= intObjects[3].x + intObjects[3].width &&
       playerBottom <= intObjects[3].y && playerY >= intObjects[3].y - intObjects[3].height) {
       setPlayerX(widhtP(30));
       setPlayerY(page3 + heightP(30));  
       scrollOnePage();
     }
-
     if (playerRight >= intObjects[4].x && playerX <= intObjects[4].x + intObjects[4].width &&
       playerBottom <= intObjects[4].y && playerY >= intObjects[4].y - intObjects[4].height) {
         setPlayerX(widhtP(30));
         setPlayerY(page3 + heightP(30));  
         scrollOnePage();
     }
-
-
   };
 
   const updateGame = () => {
@@ -358,13 +336,15 @@ const Game = () => {
     switch (moveDirection) {
       case 'ArrowLeft':
         newX = Math.max(borderWidth, playerX - 10);
+        setFlashlightDirection(25);// acording to widthP of flashlight
+        setStyleTransform(-1);// we flip the css then start it at minus widthP
         new2X = Math.min(gameSize.width - playerWidth - borderWidth * 2, player2X + 10);
-       
         break;
       case 'ArrowRight':
         newX = Math.min(gameSize.width - playerWidth - borderWidth * 2, playerX + 10);
+        setFlashlightDirection(0);
+        setStyleTransform(1);
         new2X = Math.max(borderWidth, player2X - 10);
-       
         break;
       case 'ArrowDown':
         newY = Math.max(borderWidth, playerY - 10);
@@ -445,7 +425,7 @@ const Game = () => {
     return () => {
       clearInterval(gameLoop);
     };
-  }, [playerX, playerY, moveDirection, gameSize, borderWidth, playerWidth, playerHeight]);
+  }, [playerX, playerY, moveDirection, gameSize, borderWidth, playerWidth, playerHeight, styleTransform, flashlightDirection]);
 
   const checkButtonsAndAct = () => {
     if (playerOneButton && playerTwoButton) {
@@ -513,10 +493,40 @@ const Game = () => {
 
   };
 
+  
+
 
   return (
     <div className={'no-scrollbar flashlight-on darkness-layer'} style={{ width: gameSize.width, height: gameSize.height }}>
-    
+
+      <div style={{ // darkness no2
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        backgroundColor: 'rgba(0, 0, 0, 0.6)', // Adjust the 0.5 to increase/decrease darkness
+        zIndex: 1, // Ensure this is below interactive elements
+      }}></div>
+
+      <div className="directional-flashlight" style={{
+        position: 'absolute',
+        left: `${(playerX + playerWidth / 2) - widhtP(flashlightDirection)}px`,
+        bottom: `${playerY - heightP(11)}px`,
+        width: widhtP(25),
+        height: heightP(25),
+        transform: `scaleX(${styleTransform})`,
+      }}></div>
+
+      <div className="flashlight-beam" style={{
+        position: 'absolute',
+        left: `${(playerX + playerWidth / 2) - widhtP(flashlightDirection)}px`,
+        bottom: `${playerY - heightP(11)}px`,
+        width: widhtP(25),
+        height: heightP(25), 
+        transform: `scaleX(${styleTransform})`,
+      }}></div>
+
       {graphs.map((graph, index) => (
         <div
           key={index}
@@ -619,11 +629,11 @@ const Game = () => {
       {ladders.map((ladder, index) => (
         <Ladder key={index} {...ladder} />
       ))}
-      {/* <div className="directional-flashlight" style={{
-        position: 'absolute',
-        left:`${playerX + playerWidth/2}px`,
-        bottom: `${playerY - heightP(3.5)}px`,//found darkness-layer solution. hint bottom is without page1
-        width: widhtP(10),
+     
+       {/* <div className="light-source" style={{
+        left: `${playerX + playerWidth/2}px`,
+        bottom: `${playerY - heightP(3.5)}px`,
+        width: widhtP(10), 
         height: heightP(10),
       }}></div> */}
 
