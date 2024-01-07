@@ -538,11 +538,11 @@ export default Game;
 // tmr make the yellow button finctional and make a seat for the player done
 // make the door functional? done
 
-// make the website completely resposive
+// make the website completely resposive done
 // start drawing the game icons and logos
 // make the character spritesheet
 // add the standard website things such as headers and stuff
-// add layers to give the illusion of darkness
+// add layers to give the illusion of darkness done
 
 
 
@@ -550,6 +550,18 @@ export default Game;
 // animations? 
 // add flashlight done
 
+// tmr lerm how to draw pixel art. or draw a original character spritesheet, but i guess learning how to draw pixel art would help.
+// make the flashlight spawn at other place then pick it up and then only it follows the player
+
+// add a pixel theme checkbox on the bottom right corner of the screen && maybe also add a character that uses chatgpt to answer some questions
+
+// add achivements on the top left corner same text as the promp box on the bottom
+
+// add subtitles for movies and decide on the width and height for the current project. 
+
+// learn more about layers and once the player complelets the maze add made by. on the left side. source code, see live.
+
+// try to do some work// i now you have been feeling kinda low but we need to catch up and feel better about ourself.
 
 
 // to be used in future {/* <div class="lit-square" style={{
