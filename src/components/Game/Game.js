@@ -26,29 +26,19 @@ const Game = () => {
   const [styleTransform, setStyleTransform] = useState(-1); // inverse
   const [flashlightDirection, setFlashlightDirection] = useState(25); // inverse plus widht of the flashlight, need to change
 
-  
-
-  const numberOfSteps = 60; // Number of steps in the staircase
-  const stepWidth = widthP(1); // Width of each step
-  const stepHeight = heightP(1); // Height of each step
-  const horizontalGap = widthP(0); // Horizontal gap between steps
-  const verticalGap = heightP(0); // Vertical gap between steps
-  const startX = widthP(10); // Start of step X-axis
-  const startY = page1 + heightP(0); // Start of step Y-axis
-
   // Generate the platforms for each step of the staircase
-  const staircasePlatforms = Array.from({ length: numberOfSteps }).map((_, index) => {
+  const staircasePlatforms = Array.from({ length: 60 }).map((_, index) => {
     return {
-      x: startX + index * (stepWidth + horizontalGap),
-      y: startY + index * (stepHeight + verticalGap),
-      width: stepWidth,
-      height: stepHeight
+      x: widthP(10) + index * (widthP(1)),
+      y: heightP(200) + index * (heightP(1)),
+      width: widthP(1),
+      height: heightP(1),
     };
   });
   
   const platforms = [
     // page 1
-    { x: widthP(0), y: page1 + heightP(0), width: widthP(100), height: heightP(0.5) }, // base
+    { x: widthP(0), y: page1 + heightP(0), width: widthP(100), height: heightP(1) }, // base
     { x: widthP(0), y: page1 + heightP(90), width: widthP(75), height: heightP(0.5) }, // header part 1
     { x: widthP(77.5), y: page1 + heightP(90), width: widthP(22.5), height: heightP(0.5) }, // header part 2
     { x: widthP(70), y: page1 + heightP(60), width: widthP(30), height: heightP(0.5) }, // ladder base
