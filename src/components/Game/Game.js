@@ -2,67 +2,39 @@ import React, { useState, useEffect } from 'react';
 import './Game.css'
 import Ladder from '../Ladder/Ladder';
 
-
 const Game = () => {
-  const [gameSize, setGameSize] = useState({ width: document.documentElement.clientWidth, height: document.documentElement.clientHeight * 3 });
-  const screenHeight = document.documentElement.clientHeight; // 729.60 px // 1536 px
-  const widhtP = (x) => gameSize.width * x / 100;
-  const heightP = (y) => screenHeight * y / 100;
-  const pThick = heightP(0.6);
-  const borderWidth = 5; // not sure about this
+  const [gameSize, setGameSize] = useState({ width: document.documentElement.clientWidth, height: document.documentElement.clientHeight * 3 }); // 729.60 px // 1536 px
+  const widthP = (x) => gameSize.width * x / 100;
+  const heightP = (y) => gameSize.height * y / 300;
+  const borderWidth = 5; // not sure about this // need to remove this
   const page3 = 0;
   const page2 = document.documentElement.clientHeight;
   const page1 = document.documentElement.clientHeight * 2;
-  const gravity = 5;
-  const [boolt, setBoolt] = useState(true); // test need to change
-  const [isOnPage2, setIsOnPage2] = useState(true); // test need 
-  const playerWidth = 20;// need to decide how much
-  const playerHeight = 20;
-  const [playerX, setPlayerX] = useState(widhtP(50));
-  const [playerY, setPlayerY] = useState(page1 + heightP(99));
-  const [player2X, setPlayer2X] = useState(gameSize.width * 97 / 100);
-  const [player2Y, setPlayer2Y] = useState(page2 + screenHeight * 95 / 100);
+  const gravity = heightP(1); // need to decide how much
+  const playerWidth = widthP(1.6);// need to decide how much
+  const playerHeight = widthP(1.6);// need to decide how much
+  const [playerX, setPlayerX] = useState(widthP(23));// starting position
+  const [playerY, setPlayerY] = useState(page1 + heightP(92));
+  const [player2X, setPlayer2X] = useState(widthP(97));
+  const [player2Y, setPlayer2Y] = useState(page2 + heightP(95));
   const [lightSwitch, setLightSwitch] = useState(false);
   const [playerOneButton, setPlayerOneButton] = useState(false);
   const [playerTwoButton, setPlayerTwoButton] = useState(false);
   const [timer, setTimer] = useState(null);
   const [moveDirection, setMoveDirection] = useState(null);
-  const [flashlightOn, setFlashlightOn] = useState(true);
   const [playerDirection, setPlayerDirection] = useState('right');
-  const [styleTransform, setStyleTransform] = useState(-1);
-  const [flashlightDirection, setFlashlightDirection] = useState(25);
+  const [styleTransform, setStyleTransform] = useState(-1); // inverse
+  const [flashlightDirection, setFlashlightDirection] = useState(25); // inverse plus widht of the flashlight, need to change
 
-  useEffect(() => {
-    const lightY = gameSize.height - playerY;
+  
 
-    document.documentElement.style.setProperty('--lightX', `${playerX}px`);
-    document.documentElement.style.setProperty('--lightY', `${lightY}px`);
-   
-  }, [playerX, playerY, gameSize.height, playerDirection]);
- 
-  useEffect(() => {
-    // need to add player resizes and position
-    const handleResize = () => {
-      setGameSize({ width: document.documentElement.clientWidth, height: document.documentElement.clientHeight * 3 });
-      setPlayerY(document.documentElement.clientHeight * 2 + document.documentElement.clientHeight * 89.75 / 100 + 5);// need to change
-
-    };
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  },);
-
-  //steps logic
   const numberOfSteps = 60; // Number of steps in the staircase
-  const stepWidth = gameSize.width * 1 / 100; // Width of each step
-  const stepHeight = screenHeight * 1 / 100; // Height of each step
-  const horizontalGap = 0; // Horizontal gap between steps
-  const verticalGap = 0; // Vertical gap between steps
-
-  // Starting position for the staircase
-  const startX = gameSize.width * 10 / 100;
-  const startY = page1;
+  const stepWidth = widthP(1); // Width of each step
+  const stepHeight = heightP(1); // Height of each step
+  const horizontalGap = widthP(0); // Horizontal gap between steps
+  const verticalGap = heightP(0); // Vertical gap between steps
+  const startX = widthP(10); // Start of step X-axis
+  const startY = page1 + heightP(0); // Start of step Y-axis
 
   // Generate the platforms for each step of the staircase
   const staircasePlatforms = Array.from({ length: numberOfSteps }).map((_, index) => {
@@ -73,184 +45,187 @@ const Game = () => {
       height: stepHeight
     };
   });
+  
+  const platforms = [
+    // page 1
+    { x: widthP(0), y: page1 + heightP(0), width: widthP(100), height: heightP(0.5) }, // base
+    { x: widthP(0), y: page1 + heightP(90), width: widthP(75), height: heightP(0.5) }, // header part 1
+    { x: widthP(77.5), y: page1 + heightP(90), width: widthP(22.5), height: heightP(0.5) }, // header part 2
+    { x: widthP(70), y: page1 + heightP(60), width: widthP(30), height: heightP(0.5) }, // ladder base
+
+    // page 2
+    { x: widthP(0), y: page2 + heightP(0), width: widthP(100), height: heightP(0.5) }, // base
+    { x: widthP(0), y: page2 + heightP(40), width: widthP(100), height: heightP(0.5) },
+    { x: widthP(20), y: page2 + heightP(40), width: widthP(0.3), height: heightP(60) },
+    { x: widthP(80), y: page2 + heightP(40), width: widthP(0.3), height: heightP(60) },
+    { x: widthP(22.5), y: page2 + heightP(7.5), width: widthP(2.5), height: heightP(22.5) },
+    { x: widthP(75), y: page2 + heightP(7.5), width: widthP(2.5), height: heightP(22.5) },
+    { x: widthP(25), y: page2 + heightP(7.5), width: widthP(50), height: heightP(2.5) },
+    { x: widthP(18.5), y: page2 + heightP(0), width: widthP(0.5), height: heightP(40) },
+    { x: widthP(81), y: page2 + heightP(0), width: widthP(0.5), height: heightP(40) },
+
+    // page 2 seats
+    { x: widthP(50), y: page2 + heightP(11), width: widthP(0.2), height: heightP(3) },
+    { x: widthP(53), y: page2 + heightP(11), width: widthP(0.2), height: heightP(3) },
+    { x: widthP(50), y: page2 + heightP(11), width: widthP(3), height: heightP(0.2) },
+
+    // maze player1 - part-Y 1
+    { x: widthP(5), y: page2 + heightP(45), width: 5, height: heightP(5) },
+    { x: widthP(5), y: page2 + heightP(70), width: 5, height: heightP(5) },
+    { x: widthP(5), y: page2 + heightP(80), width: 5, height: heightP(5) },
+    { x: widthP(5), y: page2 + heightP(90), width: 5, height: heightP(5) },
+    // part-Y 2
+    { x: widthP(10), y: page2 + heightP(50), width: 5, height: heightP(25) },
+    { x: widthP(10), y: page2 + heightP(85), width: 5, height: heightP(5) },
+    { x: widthP(10), y: page2 + heightP(95), width: 5, height: heightP(5) },
+    // part-Y 3
+    { x: widthP(15), y: page2 + heightP(55), width: 5, height: heightP(10) },
+    { x: widthP(15), y: page2 + heightP(75), width: 5, height: heightP(5) },
+    { x: widthP(15), y: page2 + heightP(90), width: 5, height: heightP(5) },
+
+    // maze player1 - part-X
+    { x: widthP(10), y: page2 + heightP(45), width: widthP(10), height: 5 },
+    { x: widthP(5), y: page2 + heightP(50), width: widthP(10), height: 5 },
+    { x: widthP(5), y: page2 + heightP(55), width: widthP(5), height: 5 },
+    { x: widthP(15), y: page2 + heightP(55), width: widthP(5), height: 5 },
+    { x: widthP(0), y: page2 + heightP(60), width: widthP(5), height: 5 },
+    { x: widthP(0), y: page2 + heightP(65), width: widthP(10), height: 5 },
+    { x: widthP(15), y: page2 + heightP(70), width: widthP(5), height: 5 },
+    { x: widthP(5), y: page2 + heightP(75), width: widthP(5), height: 5 },
+    { x: widthP(5), y: page2 + heightP(80), width: widthP(10), height: 5 },
+    { x: widthP(0), y: page2 + heightP(85), width: widthP(5), height: 5 },
+    { x: widthP(10), y: page2 + heightP(85), width: widthP(5), height: 5 },
+    { x: widthP(5), y: page2 + heightP(90), width: widthP(5), height: 5 },
+    { x: widthP(0), y: page2 + heightP(95), width: widthP(5), height: 5 },
+    { x: widthP(10), y: page2 + heightP(95), width: widthP(5), height: 5 },
+
+     // maze player2 - part-Y 1
+    { x: widthP(85), y: page2 + heightP(45), width: widthP(0.3), height: heightP(5) },
+    { x: widthP(85), y: page2 + heightP(70), width: widthP(0.3), height: heightP(5) },
+    { x: widthP(85), y: page2 + heightP(80), width: widthP(0.3), height: heightP(5) },
+    { x: widthP(85), y: page2 + heightP(90), width: widthP(0.3), height: heightP(5) },
+
+    // part-Y 2
+    { x: widthP(90), y: page2 + heightP(50), width: widthP(0.3), height: heightP(25) },
+    { x: widthP(90), y: page2 + heightP(85), width: widthP(0.3), height: heightP(5) },
+    { x: widthP(90), y: page2 + heightP(95), width: widthP(0.3), height: heightP(5) },
+
+    // part-Y 3
+    { x: widthP(95), y: page2 + heightP(55), width: widthP(0.3), height: heightP(10) },
+    { x: widthP(95), y: page2 + heightP(75), width: widthP(0.3), height: heightP(5) },
+    { x: widthP(95), y: page2 + heightP(90), width: widthP(0.3), height: heightP(5) },
+
+    // maze player2 - part-X
+    { x: widthP(90), y: page2 + heightP(45), width: widthP(10), height: heightP(0.5) },
+    { x: widthP(85), y: page2 + heightP(50), width: widthP(10), height: heightP(0.5) },
+    { x: widthP(85), y: page2 + heightP(55), width: widthP(5), height: heightP(0.5) },
+    { x: widthP(95), y: page2 + heightP(55), width: widthP(5), height: heightP(0.5) },
+    { x: widthP(80), y: page2 + heightP(60), width: widthP(5), height: heightP(0.5) },
+    { x: widthP(80), y: page2 + heightP(65), width: widthP(10), height: heightP(0.5) },
+    { x: widthP(95), y: page2 + heightP(70), width: widthP(5), height: heightP(0.5) },
+    { x: widthP(85), y: page2 + heightP(75), width: widthP(5), height: heightP(0.5) },
+    { x: widthP(85), y: page2 + heightP(80), width: widthP(10), height: heightP(0.5) },
+    { x: widthP(80), y: page2 + heightP(85), width: widthP(5), height: heightP(0.5) },
+    { x: widthP(90), y: page2 + heightP(85), width: widthP(5), height: heightP(0.5) },
+    { x: widthP(85), y: page2 + heightP(90), width: widthP(5), height: heightP(0.5) },
+    { x: widthP(80), y: page2 + heightP(95), width: widthP(5), height: heightP(0.5) },
+    { x: widthP(90), y: page2 + heightP(95), width: widthP(5), height: heightP(0.5) },
+
+    // page 3
+    { x: widthP(5), y: page3 + heightP(30), width: widthP(90), height: widthP(0.3) }, //middle platforn
+    { x: widthP(0), y: page3 + heightP(0), width: widthP(100), height: heightP(0.6) },// base
+
+    ...staircasePlatforms // stairs are included in platforms for now
+  ];
 
   const graphs = [
 
-    // platforms for page1
-    { x: 0, y: page1 + screenHeight * 90 / 100, width: gameSize.width, height: 1 },
-    { x: 0, y: page1 + screenHeight * 80 / 100, width: gameSize.width, height: 1 },
-    { x: 0, y: page1 + screenHeight * 70 / 100, width: gameSize.width, height: 1 },
-    { x: 0, y: page1 + screenHeight * 60 / 100, width: gameSize.width, height: 1 },
-    { x: 0, y: page1 + screenHeight * 50 / 100, width: gameSize.width, height: 1 },
-    { x: 0, y: page1 + screenHeight * 40 / 100, width: gameSize.width, height: 1 },
-    { x: 0, y: page1 + screenHeight * 30 / 100, width: gameSize.width, height: 1 },
-    { x: 0, y: page1 + screenHeight * 20 / 100, width: gameSize.width, height: 1 },
-    { x: 0, y: page1 + screenHeight * 10 / 100, width: gameSize.width, height: 1 },
+    // X-axis page1 Graph
+    { x: widthP(0), y: page1 + heightP(90), width: widthP(100), height: heightP(0.15) },
+    { x: widthP(0), y: page1 + heightP(80), width: widthP(100), height: heightP(0.15) },
+    { x: widthP(0), y: page1 + heightP(70), width: widthP(100), height: heightP(0.15) },
+    { x: widthP(0), y: page1 + heightP(60), width: widthP(100), height: heightP(0.15) },
+    { x: widthP(0), y: page1 + heightP(50), width: widthP(100), height: heightP(0.15) },
+    { x: widthP(0), y: page1 + heightP(40), width: widthP(100), height: heightP(0.15) },
+    { x: widthP(0), y: page1 + heightP(30), width: widthP(100), height: heightP(0.15) },
+    { x: widthP(0), y: page1 + heightP(20), width: widthP(100), height: heightP(0.15) },
+    { x: widthP(0), y: page1 + heightP(10), width: widthP(100), height: heightP(0.15) },
 
-    // Platforms for page2
-    { x: 0, y: page2 + screenHeight * 90 / 100, width: gameSize.width, height: 1 },
-    { x: 0, y: page2 + screenHeight * 80 / 100, width: gameSize.width, height: 1 },
-    { x: 0, y: page2 + screenHeight * 70 / 100, width: gameSize.width, height: 1 },
-    { x: 0, y: page2 + screenHeight * 60 / 100, width: gameSize.width, height: 1 },
-    { x: 0, y: page2 + screenHeight * 50 / 100, width: gameSize.width, height: 1 },
-    { x: 0, y: page2 + screenHeight * 40 / 100, width: gameSize.width, height: 1 },
-    { x: 0, y: page2 + screenHeight * 30 / 100, width: gameSize.width, height: 1 },
-    { x: 0, y: page2 + screenHeight * 20 / 100, width: gameSize.width, height: 1 },
-    { x: 0, y: page2 + screenHeight * 10 / 100, width: gameSize.width, height: 1 },
+    // X-axis page2 Graph
+    { x: widthP(0), y: page2 + heightP(90), width: widthP(100), height: heightP(0.15) },
+    { x: widthP(0), y: page2 + heightP(80), width: widthP(100), height: heightP(0.15) },
+    { x: widthP(0), y: page2 + heightP(70), width: widthP(100), height: heightP(0.15) },
+    { x: widthP(0), y: page2 + heightP(60), width: widthP(100), height: heightP(0.15) },
+    { x: widthP(0), y: page2 + heightP(50), width: widthP(100), height: heightP(0.15) },
+    { x: widthP(0), y: page2 + heightP(40), width: widthP(100), height: heightP(0.15) },
+    { x: widthP(0), y: page2 + heightP(30), width: widthP(100), height: heightP(0.15) },
+    { x: widthP(0), y: page2 + heightP(20), width: widthP(100), height: heightP(0.15) },
+    { x: widthP(0), y: page2 + heightP(10), width: widthP(100), height: heightP(0.15) },
 
-    // Platforms for page3
-    { x: 0, y: page3 + screenHeight * 90 / 100, width: gameSize.width, height: 1 },
-    { x: 0, y: page3 + screenHeight * 80 / 100, width: gameSize.width, height: 1 },
-    { x: 0, y: page3 + screenHeight * 70 / 100, width: gameSize.width, height: 1 },
-    { x: 0, y: page3 + screenHeight * 60 / 100, width: gameSize.width, height: 1 },
-    { x: 0, y: page3 + screenHeight * 50 / 100, width: gameSize.width, height: 1 },
-    { x: 0, y: page3 + screenHeight * 40 / 100, width: gameSize.width, height: 1 },
-    { x: 0, y: page3 + screenHeight * 30 / 100, width: gameSize.width, height: 1 },
-    { x: 0, y: page3 + screenHeight * 20 / 100, width: gameSize.width, height: 1 },
-    { x: 0, y: page3 + screenHeight * 10 / 100, width: gameSize.width, height: 1 },
+    // X-axis page3 Graph
+    { x: widthP(0), y: page3 + heightP(90), width: widthP(100), height: heightP(0.15) },
+    { x: widthP(0), y: page3 + heightP(80), width: widthP(100), height: heightP(0.15) },
+    { x: widthP(0), y: page3 + heightP(70), width: widthP(100), height: heightP(0.15) },
+    { x: widthP(0), y: page3 + heightP(60), width: widthP(100), height: heightP(0.15) },
+    { x: widthP(0), y: page3 + heightP(50), width: widthP(100), height: heightP(0.15) },
+    { x: widthP(0), y: page3 + heightP(40), width: widthP(100), height: heightP(0.15) },
+    { x: widthP(0), y: page3 + heightP(30), width: widthP(100), height: heightP(0.15) },
+    { x: widthP(0), y: page3 + heightP(20), width: widthP(100), height: heightP(0.15) },
+    { x: widthP(0), y: page3 + heightP(10), width: widthP(100), height: heightP(0.15) },
 
-    // Y axis Platforms
-    { x: gameSize.width * 10 / 100, y: 0, width: 1, height: screenHeight * 3 },
-    { x: gameSize.width * 20 / 100, y: 0, width: 1, height: screenHeight * 3 },
-    { x: gameSize.width * 30 / 100, y: 0, width: 1, height: screenHeight * 3 },
-    { x: gameSize.width * 40 / 100, y: 0, width: 1, height: screenHeight * 3 },
-    { x: gameSize.width * 50 / 100, y: 0, width: 1, height: screenHeight * 3 },
-    { x: gameSize.width * 60 / 100, y: 0, width: 1, height: screenHeight * 3 },
-    { x: gameSize.width * 70 / 100, y: 0, width: 1, height: screenHeight * 3 },
-    { x: gameSize.width * 80 / 100, y: 0, width: 1, height: screenHeight * 3 },
-    { x: gameSize.width * 90 / 100, y: 0, width: 1, height: screenHeight * 3 },
+    // Y axis Graph
+    { x: widthP(10), y: heightP(0), width: widthP(0.1), height: heightP(300) },
+    { x: widthP(20), y: heightP(0), width: widthP(0.1), height: heightP(300) },
+    { x: widthP(30), y: heightP(0), width: widthP(0.1), height: heightP(300) },
+    { x: widthP(40), y: heightP(0), width: widthP(0.1), height: heightP(300) },
+    { x: widthP(50), y: heightP(0), width: widthP(0.1), height: heightP(300) },
+    { x: widthP(60), y: heightP(0), width: widthP(0.1), height: heightP(300) },
+    { x: widthP(70), y: heightP(0), width: widthP(0.1), height: heightP(300) },
+    { x: widthP(80), y: heightP(0), width: widthP(0.1), height: heightP(300) },
+    { x: widthP(90), y: heightP(0), width: widthP(0.1), height: heightP(300) },
+
   ]
 
   const intObjects = [
-    { x: 0, y: page1 + 5, width: widhtP(3.25), height: heightP(10) - 5 },//light switch 0
-    { x: widhtP(17.5), y: page2 + heightP(40) + 5, width: widhtP(2.5), height: heightP(5) }, //playerone button 1
-    { x: widhtP(97.5), y: page2 + heightP(40) + 5,  width: widhtP(2.5), height: heightP(5)}, // playertwo button 
-    { x: widhtP(22.5), y: page2 + 5, width: widhtP(0.3), height: heightP(7.5) - 5 }, // door 1
-    { x: widhtP(77.2), y: page2 + 5, width: widhtP(0.3), height: heightP(7.5) - 5 }, // door 2
+    { x: widthP(0), y: page1 + heightP(0.5), width: widthP(3.25), height: heightP(10) - heightP(0.5) },//light switch 0
+    { x: widthP(17.5), y: page2 + heightP(40) + heightP(0.5), width: widthP(2.5), height: heightP(5) }, //player1 button 
+    { x: widthP(97.5), y: page2 + heightP(40) + heightP(0.5),  width: widthP(2.5), height: heightP(5)}, // player2 button 
+    { x: widthP(22.5), y: page2 + heightP(0.5), width: widthP(0.3), height: heightP(7.5) - heightP(0.5) }, // door 1
+    { x: widthP(77.2), y: page2 + heightP(0.5), width: widthP(0.3), height: heightP(7.5) - heightP(0.5) }, // door 2
 
   ]
 
   const teleporters = [
-    { x: widhtP(5), y: page1 + 5, width: widhtP(2), height: screenHeight * 5 / 100 - 5 }
+    { x: widthP(5), y: page1 + heightP(0.5), width: widthP(2), height: heightP(5) - heightP(0.5) }
   ]
 
-  const platforms = [
-    // page no 1
-
-    { x: 0, y: page1, width: gameSize.width, height: 5 },// base
-    { x: 0, y: page1 + screenHeight * 90 / 100, width: gameSize.width * 75 / 100, height: pThick }, // header part 1
-    { x: gameSize.width * 77.5 / 100, y: page1 + screenHeight * 90 / 100, width: gameSize.width * 22.5 / 100, height: 5 }, // header part 2
-    { x: gameSize.width * 70 / 100, y: page1 + screenHeight * 60 / 100, width: gameSize.width * 30 / 100, height: 5 }, // ladder base
-
-    // page no 2
-    { x: 0, y: page2, width: gameSize.width, height: 5 },// base
-    { x: 0, y: page2 + heightP(40), width: gameSize.width, height: 5 },
-    { x: widhtP(20), y: page2 + heightP(40), width: 5, height: heightP(60) },
-    { x: widhtP(80), y: page2 + heightP(40), width: 5, height: heightP(60) },
-    { x: widhtP(22.5), y: page2 + heightP(7.5), width: widhtP(2.5), height: heightP(22.5) },
-    { x: widhtP(75), y: page2 + heightP(7.5), width: widhtP(2.5), height: heightP(22.5) },
-    { x: widhtP(25), y: page2 + heightP(7.5), width: widhtP(50), height: heightP(2.5) },
-    { x: widhtP(18.5), y: page2, width: widhtP(0.5), height: heightP(40) },
-    { x: widhtP(81), y: page2, width: widhtP(0.5), height: heightP(40) },
-
-    //page 2 seats
-    { x: widhtP(50), y: page2 + heightP(11), width: widhtP(0.2), height: heightP(3) },
-    { x: widhtP(53), y: page2 + heightP(11), width: widhtP(0.2), height: heightP(3) },
-    { x: widhtP(50), y: page2 + heightP(11), width: widhtP(3), height:widhtP(0.2) },
-
-
-    //page no 3
-    { x: widhtP(5), y: page3 + heightP(30), width: widhtP(90), height:widhtP(0.3) },
-
-
-    // title space
-    // { x: widhtP(2.5), y: page2 + heightP(90), width: widhtP(15), height: heightP(5) },
-    // maze
-    //part 1
-    { x: widhtP(5), y: page2 + heightP(45), width: 5, height: heightP(5) },
-    { x: widhtP(5), y: page2 + heightP(70), width: 5, height: heightP(5) },
-    { x: widhtP(5), y: page2 + heightP(80), width: 5, height: heightP(5) },
-    { x: widhtP(5), y: page2 + heightP(90), width: 5, height: heightP(5) },
-    //part 2
-    { x: widhtP(10), y: page2 + heightP(50), width: 5, height: heightP(25) },
-    { x: widhtP(10), y: page2 + heightP(85), width: 5, height: heightP(5) },
-    { x: widhtP(10), y: page2 + heightP(95), width: 5, height: heightP(5) },
-    // part3
-    { x: widhtP(15), y: page2 + heightP(55), width: 5, height: heightP(10) },
-    { x: widhtP(15), y: page2 + heightP(75), width: 5, height: heightP(5) },
-    { x: widhtP(15), y: page2 + heightP(90), width: 5, height: heightP(5) },
-
-    // partx written by y increases
-    { x: widhtP(10), y: page2 + heightP(45), width: widhtP(10), height: 5 },
-    { x: widhtP(5), y: page2 + heightP(50), width: widhtP(10), height: 5 },
-    { x: widhtP(5), y: page2 + heightP(55), width: widhtP(5), height: 5 },
-    { x: widhtP(15), y: page2 + heightP(55), width: widhtP(5), height: 5 },
-
-    { x: widhtP(0), y: page2 + heightP(60), width: widhtP(5), height: 5 },
-    { x: widhtP(0), y: page2 + heightP(65), width: widhtP(10), height: 5 },
-    { x: widhtP(15), y: page2 + heightP(70), width: widhtP(5), height: 5 },
-    { x: widhtP(5), y: page2 + heightP(75), width: widhtP(5), height: 5 },
-
-    { x: widhtP(5), y: page2 + heightP(80), width: widhtP(10), height: 5 },
-    { x: widhtP(0), y: page2 + heightP(85), width: widhtP(5), height: 5 },
-    { x: widhtP(10), y: page2 + heightP(85), width: widhtP(5), height: 5 },
-    { x: widhtP(5), y: page2 + heightP(90), width: widhtP(5), height: 5 },
-
-    { x: widhtP(0), y: page2 + heightP(95), width: widhtP(5), height: 5 },
-    { x: widhtP(10), y: page2 + heightP(95), width: widhtP(5), height: 5 },
-
-    // maze
-    // part 1
-    { x: widhtP(85), y: page2 + heightP(45), width: pThick, height: heightP(5) },
-    { x: widhtP(85), y: page2 + heightP(70), width: pThick, height: heightP(5) },
-    { x: widhtP(85), y: page2 + heightP(80), width: pThick, height: heightP(5) },
-    { x: widhtP(85), y: page2 + heightP(90), width: pThick, height: heightP(5) },
-
-    // part 2
-    { x: widhtP(90), y: page2 + heightP(50), width: pThick, height: heightP(25) },
-    { x: widhtP(90), y: page2 + heightP(85), width: pThick, height: heightP(5) },
-    { x: widhtP(90), y: page2 + heightP(95), width: pThick, height: heightP(5) },
-
-    // part 3
-    { x: widhtP(95), y: page2 + heightP(55), width: pThick, height: heightP(10) },
-    { x: widhtP(95), y: page2 + heightP(75), width: pThick, height: heightP(5) },
-    { x: widhtP(95), y: page2 + heightP(90), width: pThick, height: heightP(5) },
-
-    // part x
-    { x: widhtP(90), y: page2 + heightP(45), width: widhtP(10), height: pThick },
-    { x: widhtP(85), y: page2 + heightP(50), width: widhtP(10), height: pThick },
-    { x: widhtP(85), y: page2 + heightP(55), width: widhtP(5), height: pThick },
-    { x: widhtP(95), y: page2 + heightP(55), width: widhtP(5), height: pThick },
-
-    { x: widhtP(80), y: page2 + heightP(60), width: widhtP(5), height: pThick },
-    { x: widhtP(80), y: page2 + heightP(65), width: widhtP(10), height: pThick },
-    { x: widhtP(95), y: page2 + heightP(70), width: widhtP(5), height: pThick },
-    { x: widhtP(85), y: page2 + heightP(75), width: widhtP(5), height: pThick },
-
-    { x: widhtP(85), y: page2 + heightP(80), width: widhtP(10), height: pThick },
-    { x: widhtP(80), y: page2 + heightP(85), width: widhtP(5), height: pThick },
-    { x: widhtP(90), y: page2 + heightP(85), width: widhtP(5), height: pThick },
-    { x: widhtP(85), y: page2 + heightP(90), width: widhtP(5), height: pThick },
-
-    { x: widhtP(80), y: page2 + heightP(95), width: widhtP(5), height: pThick },
-    { x: widhtP(90), y: page2 + heightP(95), width: widhtP(5), height: pThick },
-
-
-
-
-
-
-
-    // page no 3
-    { x: 0, y: page3, width: gameSize.width, height: 5 },// base
-
-    ...staircasePlatforms // stairs are included in platforms
-  ];
 
   const ladders = [
-    { x: gameSize.width * 75 / 100, y: page1 + screenHeight * 60 / 100, width: gameSize.width * 2.5 / 100, height: screenHeight * 30 / 100 + platforms[1].height },
+    { x: widthP(75), y: page1 + heightP(60), width: widthP(2.5), height: heightP(30) + platforms[1].height },
   ];
 
+  useEffect(() => {
+    // need to figure out how to remove it
+    const lightY = gameSize.height - playerY;
+    document.documentElement.style.setProperty('--lightX', `${playerX}px`);
+    document.documentElement.style.setProperty('--lightY', `${lightY}px`);
+  }, [playerX, playerY, gameSize.height, playerDirection]);
+ 
+  useEffect(() => {
+    // need to add player resizes
+    const handleResize = () => {
+      setGameSize({ width: document.documentElement.clientWidth, height: document.documentElement.clientHeight * 3 });
+      setPlayerX(playerX * document.documentElement.clientWidth/gameSize.width);
+      setPlayerY(playerY * document.documentElement.clientHeight * 3/gameSize.height);
+      setPlayer2X(player2X * document.documentElement.clientWidth/gameSize.width)
+      setPlayer2Y(player2Y * document.documentElement.clientHeight * 3/gameSize.height);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  },);
+  
   // dont know what handlekeydown and up do
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -266,8 +241,6 @@ const Game = () => {
         setPlayerDirection('right');
       }
     };
-
-    
 
     const handleKeyUp = (e) => {
       if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
@@ -286,13 +259,13 @@ const Game = () => {
 
   const scrollOnePage = () => {
     window.scrollBy({
-      top: page2, // Scroll down by one page// page2
+      top: heightP(100), // Scroll down by one page// page2
       behavior: 'smooth' // Optional: for smooth scrolling
     });
   };
 
   const checkInteractions = () => {
-    // Assuming playerWidth and playerHeight define the size of the player
+    
     const playerRight = playerX + playerWidth;
     const playerBottom = playerY - playerHeight; // Assuming Y increases downwards
 
@@ -302,7 +275,7 @@ const Game = () => {
       setLightSwitch(true);
       scrollOnePage();
       setPlayerX(0);
-      setPlayerY(page2 + screenHeight - 40);
+      setPlayerY(page2 + heightP(97));
     }
     if ((playerRight >= intObjects[1].x && playerX <= intObjects[1].x + intObjects[1].width &&
       playerBottom <= intObjects[1].y && playerY >= intObjects[1].y - intObjects[1].height) && !playerOneButton) {
@@ -314,13 +287,13 @@ const Game = () => {
     }
     if (playerRight >= intObjects[3].x && playerX <= intObjects[3].x + intObjects[3].width &&
       playerBottom <= intObjects[3].y && playerY >= intObjects[3].y - intObjects[3].height) {
-      setPlayerX(widhtP(30));
+      setPlayerX(widthP(30));
       setPlayerY(page3 + heightP(30));  
       scrollOnePage();
     }
     if (playerRight >= intObjects[4].x && playerX <= intObjects[4].x + intObjects[4].width &&
       playerBottom <= intObjects[4].y && playerY >= intObjects[4].y - intObjects[4].height) {
-        setPlayerX(widhtP(30));
+        setPlayerX(widthP(30));
         setPlayerY(page3 + heightP(30));  
         scrollOnePage();
     }
@@ -335,13 +308,13 @@ const Game = () => {
 
     switch (moveDirection) {
       case 'ArrowLeft':
-        newX = Math.max(borderWidth, playerX - 10);
+        newX = Math.max(borderWidth, playerX - widthP(.8)); // need to test and change
         setFlashlightDirection(25);// acording to widthP of flashlight
         setStyleTransform(-1);// we flip the css then start it at minus widthP
-        new2X = Math.min(gameSize.width - playerWidth - borderWidth * 2, player2X + 10);
+        new2X = Math.min(widthP(100) - playerWidth - borderWidth * 2, player2X + 10);
         break;
       case 'ArrowRight':
-        newX = Math.min(gameSize.width - playerWidth - borderWidth * 2, playerX + 10);
+        newX = Math.min(widthP(100) - playerWidth - borderWidth * 2, playerX + 10);
         setFlashlightDirection(0);
         setStyleTransform(1);
         new2X = Math.max(borderWidth, player2X - 10);
@@ -358,7 +331,7 @@ const Game = () => {
         break;
     }
 
-    const onPlatform1 = platforms.some(platform => {
+    const playerOneTouchPlatforms = platforms.some(platform => {
       return (
         newX < platform.x + platform.width &&
         newX + playerWidth > platform.x &&
@@ -367,13 +340,13 @@ const Game = () => {
       );
     });
 
-    if (!onPlatform1) {
+    if (!playerOneTouchPlatforms) {
       setPlayerX(newX);
       setPlayerY(newY);
     }
 
 
-    const onPlatform2 = platforms.some(platform => {
+    const playerTwoTouchPlatforms = platforms.some(platform => {
       return (
         new2X < platform.x + platform.width &&
         new2X + playerWidth > platform.x &&
@@ -382,10 +355,11 @@ const Game = () => {
       );
     });
 
-    if (!onPlatform2) {
+    if (!playerTwoTouchPlatforms) {
       setPlayer2X(new2X);
       setPlayer2Y(new2Y);
     }
+
     const onPlatformVertically = platforms.some(platform => {
       return (
         playerX < platform.x + platform.width &&
@@ -403,19 +377,6 @@ const Game = () => {
       applyGravity();
     }
 
-    
-
-
-
-    if (playerX >= 10000 && boolt === true) { // hardcoded will change it later
-      setBoolt(false);
-      scrollOnePage();
-
-      setPlayerX(0);
-      setPlayerY(page2 + screenHeight - 40);
-
-    }
-   
     checkInteractions();
   };
 
@@ -425,15 +386,16 @@ const Game = () => {
     return () => {
       clearInterval(gameLoop);
     };
-  }, [playerX, playerY, moveDirection, gameSize, borderWidth, playerWidth, playerHeight, styleTransform, flashlightDirection]);
+  }, [playerX, playerY, moveDirection, gameSize, playerWidth, playerHeight, styleTransform, flashlightDirection]);
 
   const checkButtonsAndAct = () => {
+    // need to remove the timer
     if (playerOneButton && playerTwoButton) {
-      // Do something immediately if both buttons are true
+     
       
-      setPlayerX(widhtP(50));
+      setPlayerX(widthP(50));
       setPlayerY(page2 + heightP(20));
-      setPlayer2X(widhtP(50));
+      setPlayer2X(widthP(50));
       setPlayer2Y(page1 + heightP(10));
       // Clear any existing timer
       clearTimeout(timer);
@@ -467,7 +429,7 @@ const Game = () => {
   const applyGravity = () => {
     let newY = playerY - gravity; // The player moves down due to gravity
 
-    const onPlatformn = platforms.some(platform => { //checks if platform
+    const playerOneTouchPlatformsAgain = platforms.some(platform => { //checks if platform
       const withinXBounds = playerX < platform.x + platform.width && playerX + playerWidth > platform.x;
       const landedOnTop = newY < platform.y + platform.height && newY + playerHeight > platform.y;
       return withinXBounds && landedOnTop;
@@ -487,42 +449,35 @@ const Game = () => {
 
     newY = Math.max(borderWidth, newY); // prevent falling through border
 
-    if (!onPlatformn) {
+    if (!playerOneTouchPlatformsAgain) {
       setPlayerY(newY); // applys gravity
     }
 
   };
-
-  
-
 
   return (
     <div className={'no-scrollbar flashlight-on darkness-layer'} style={{ width: gameSize.width, height: gameSize.height }}>
 
       <div style={{ // darkness no2
         position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        backgroundColor: 'rgba(0, 0, 0, 0.6)', // Adjust the 0.5 to increase/decrease darkness
+        top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0, 0, 0, 0.6)', // Adjust the 0.5 to increase/decrease darkness
         zIndex: 1, // Ensure this is below interactive elements
       }}></div>
 
       <div className="directional-flashlight" style={{
         position: 'absolute',
-        left: `${(playerX + playerWidth / 2) - widhtP(flashlightDirection)}px`,
+        left: `${(playerX + playerWidth / 2) - widthP(flashlightDirection)}px`,
         bottom: `${playerY - heightP(11)}px`,
-        width: widhtP(25),
+        width: widthP(25),
         height: heightP(25),
         transform: `scaleX(${styleTransform})`,
       }}></div>
 
       <div className="flashlight-beam" style={{
         position: 'absolute',
-        left: `${(playerX + playerWidth / 2) - widhtP(flashlightDirection)}px`,
+        left: `${(playerX + playerWidth / 2) - widthP(flashlightDirection)}px`,
         bottom: `${playerY - heightP(11)}px`,
-        width: widhtP(25),
+        width: widthP(25),
         height: heightP(25), 
         transform: `scaleX(${styleTransform})`,
       }}></div>
@@ -556,9 +511,9 @@ const Game = () => {
         alt='Player'
         style={{
           position: 'absolute',
-          left: widhtP(20),
+          left: widthP(20),
           bottom: page2 + heightP(40),
-          width: widhtP(60),
+          width: widthP(60),
           height: heightP(60),
         }}
       />
@@ -567,23 +522,23 @@ const Game = () => {
         alt='Playerx'
         style={{
           position: 'absolute',
-          left: widhtP(0),
+          left: widthP(0),
           bottom: page1 + heightP(0),
-          width: widhtP(100),
+          width: widthP(100),
           height: heightP(100),
         }}
       /> */}
 
 
-      {isOnPage2 && <img
+      {<img
         src='https://i.pinimg.com/originals/9a/35/d6/9a35d6b50aaea74a80052640850d86d3.png' // Replace 'player-icon.png' with the path to your image
         alt='Player'
         style={{
           position: 'absolute',
           left: `${player2X}px`,
           bottom: `${player2Y}px`,
-          width: widhtP(1.6),
-          height: widhtP(1.6),
+          width: widthP(1.6),
+          height: widthP(1.6),
         }}
       />}
       {platforms.map((platform, index) => (
@@ -633,17 +588,78 @@ const Game = () => {
        {/* <div className="light-source" style={{
         left: `${playerX + playerWidth/2}px`,
         bottom: `${playerY - heightP(3.5)}px`,
-        width: widhtP(10), 
+        width: widthP(10), 
         height: heightP(10),
       }}></div> */}
 
+      {/* page 1 components */}
+
+      <h1 style={{
+          position: 'absolute',
+          left: widthP(6),
+          bottom: page1 + heightP(93),
+          fontSize: widthP(3.5),
+          height: heightP(0.1),
+          lineHeight: heightP(0.1),
+        }}>DevWeber</h1>
+      <h3 style={{
+          position: 'absolute',
+          left: widthP(75.5),
+          bottom: page1 + heightP(93),
+          fontSize: widthP(1.5),
+          height: heightP(0.1),
+          lineHeight: heightP(0.1),
+        }}>Home</h3>
+        <h3 style={{
+          position: 'absolute',
+          left: widthP(81),
+          bottom: page1 + heightP(93),
+          fontSize: widthP(1.5),
+          height: heightP(0.1),
+          lineHeight: heightP(0.1),
+        }}>Work</h3>
+        <h3 style={{
+          position: 'absolute',
+          left: widthP(86.5),
+          bottom: page1 + heightP(93),
+          fontSize: widthP(1.5),
+          height: heightP(0.1),
+          lineHeight: heightP(0.1),
+        }}>Contact</h3>
+
+        <img
+        src='./temp.png' // project img
+        alt='PlayerPhoto1'
+        style={{
+          position: 'absolute',
+          left: widthP(10),
+          bottom: page1 + heightP(45),
+          width: widthP(15),
+          height: heightP(35),
+          
+        }}
+        />
+
+        <img
+        src='./temp.png' // project img
+        alt='PlayerPhoto2'
+        style={{
+          position: 'absolute',
+          left: widthP(70),
+          bottom: page1 + heightP(30),
+          width: widthP(30),
+          height: heightP(20),
+        }}
+        />
+
+      {/* page3 components */}
       <p
         style={{
           position: 'absolute',
-          left: widhtP(30),
+          left: widthP(30),
           bottom: page3 + heightP(60),
-          width: widhtP(60),
-          height: widhtP(1.6),
+          width: widthP(60),
+          height: widthP(1.6),
         }}
       > Thank you so much for playing my game/viewing my portfolio/visiting my website/waisting your time</p>
 
@@ -681,35 +697,35 @@ export default Game;
 
 // level 2
 // animations? 
-// add flashlight
+// add flashlight done
 
 
 
 // to be used in future {/* <div class="lit-square" style={{
         //   position: 'absolute',
-        //   left: widhtP(70),
+        //   left: widthP(70),
         //   bottom: heightP(30),
-        //   width: widhtP(56),
+        //   width: widthP(56),
         //   height: heightP(5),
         // }}></div> */}
 
       {/* <div class="permanent-light" style={{
         position: 'absolute',
-        left: widhtP(70),// cool door effect. will use it for cinema doors uncrease width
+        left: widthP(70),// cool door effect. will use it for cinema doors uncrease width
         bottom: heightP(30),
-        width: widhtP(5),
+        width: widthP(5),
         height: heightP(5),
       }}></div> */}
       {/* <div className="permanent-light" style={{
-        left: widhtP(60),
+        left: widthP(60),
         bottom: heightP(20),//found darkness-layer soulution. hint bottom is without page1
-        width: widhtP(1),
+        width: widthP(1),
         height: heightP(1),
       }}></div>
       <div className="permanent-light" style={{
-        left: widhtP(61),
+        left: widthP(61),
         bottom: heightP(20),//found darkness-layer soulution. hint bottom is without page1
-        width: widhtP(2),
+        width: widthP(2),
         height: heightP(2),
       }}></div> */}
       // <div className="permanent-light" style={{
@@ -717,7 +733,7 @@ export default Game;
         
       //   left:`${playerX}px`,
       //   bottom: `${playerY}px`,//found darkness-layer soulution. hint bottom is without page1
-      //   width: widhtP(6),
+      //   width: widthP(6),
       //   height: heightP(15),
       // }}></div>
        
@@ -725,8 +741,13 @@ export default Game;
 
 
       {/* <div className='flashlight-beam'  style={{
-        left: widhtP(60),
+        left: widthP(60),
         bottom: heightP(20),//found darkness-layer soulution. hint bottom is without page1
-        width: widhtP(1),
+        width: widthP(1),
         height: heightP(1),
       }}></div> */}
+
+
+
+      // amimations
+      // wake up animation, ladder animation, generator animation.
