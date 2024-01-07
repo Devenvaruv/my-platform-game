@@ -176,23 +176,59 @@ const Game = () => {
 
   ]
 
+  const ladders = [
+    { x: widthP(75), y: page1 + heightP(60), width: widthP(2.5), height: heightP(30) + platforms[1].height },
+  ];
+
   const intObjects = [
     { x: widthP(0), y: page1 + heightP(0.5), width: widthP(3.25), height: heightP(10) - heightP(0.5) },//light switch 0
     { x: widthP(17.5), y: page2 + heightP(40) + heightP(0.5), width: widthP(2.5), height: heightP(5) }, //player1 button 
     { x: widthP(97.5), y: page2 + heightP(40) + heightP(0.5),  width: widthP(2.5), height: heightP(5)}, // player2 button 
     { x: widthP(22.5), y: page2 + heightP(0.5), width: widthP(0.3), height: heightP(7.5) - heightP(0.5) }, // door 1
     { x: widthP(77.2), y: page2 + heightP(0.5), width: widthP(0.3), height: heightP(7.5) - heightP(0.5) }, // door 2
-
   ]
+  
+  const checkInteractions = () => {
+    
+    const playerRight = playerX + playerWidth;
+    const playerBottom = playerY - playerHeight; // Assuming Y increases downwards
 
-  const teleporters = [
-    { x: widthP(5), y: page1 + heightP(0.5), width: widthP(2), height: heightP(5) - heightP(0.5) }
-  ]
+    if ((playerRight >= intObjects[0].x && playerX <= intObjects[0].x + intObjects[0].width &&
+      playerBottom <= intObjects[0].y && playerY >= intObjects[0].y - intObjects[0].height) && !lightSwitch) {
+        // optional change the img or add annimations
+      setLightSwitch(true);
+      scrollOnePage();
+      setPlayerX(0);
+      setPlayerY(page2 + heightP(97));
+    }
+    if ((playerRight >= intObjects[1].x && playerX <= intObjects[1].x + intObjects[1].width &&
+      playerBottom <= intObjects[1].y && playerY >= intObjects[1].y - intObjects[1].height) && !playerOneButton) {
+      setPlayerOneButton(true);
+    }
+    if ((player2X + playerWidth >= intObjects[2].x && player2X <= intObjects[2].x + intObjects[2].width &&
+      player2Y - playerHeight <= intObjects[2].y && player2Y >= intObjects[2].y - intObjects[2].height) && !playerTwoButton) {
+      setPlayerTwoButton(true);
+    }
+    if (playerRight >= intObjects[3].x && playerX <= intObjects[3].x + intObjects[3].width &&
+      playerBottom <= intObjects[3].y && playerY >= intObjects[3].y - intObjects[3].height) {
+      setPlayerX(widthP(30));
+      setPlayerY(page3 + heightP(30));  
+      scrollOnePage();
+    }
+    if (playerRight >= intObjects[4].x && playerX <= intObjects[4].x + intObjects[4].width &&
+      playerBottom <= intObjects[4].y && playerY >= intObjects[4].y - intObjects[4].height) {
+        setPlayerX(widthP(30));
+        setPlayerY(page3 + heightP(30));  
+        scrollOnePage();
+    }
+  };
 
-
-  const ladders = [
-    { x: widthP(75), y: page1 + heightP(60), width: widthP(2.5), height: heightP(30) + platforms[1].height },
-  ];
+  const scrollOnePage = () => {
+    window.scrollBy({
+      top: heightP(100), // Scroll down by one page// page2
+      behavior: 'smooth' // Optional: for smooth scrolling
+    });
+  };
 
   useEffect(() => {
     // need to figure out how to remove it
@@ -246,48 +282,6 @@ const Game = () => {
       window.removeEventListener('keyup', handleKeyUp);
     };
   }, []);
-
-  const scrollOnePage = () => {
-    window.scrollBy({
-      top: heightP(100), // Scroll down by one page// page2
-      behavior: 'smooth' // Optional: for smooth scrolling
-    });
-  };
-
-  const checkInteractions = () => {
-    
-    const playerRight = playerX + playerWidth;
-    const playerBottom = playerY - playerHeight; // Assuming Y increases downwards
-
-    if ((playerRight >= intObjects[0].x && playerX <= intObjects[0].x + intObjects[0].width &&
-      playerBottom <= intObjects[0].y && playerY >= intObjects[0].y - intObjects[0].height) && !lightSwitch) {
-        // optional change the img or add annimations
-      setLightSwitch(true);
-      scrollOnePage();
-      setPlayerX(0);
-      setPlayerY(page2 + heightP(97));
-    }
-    if ((playerRight >= intObjects[1].x && playerX <= intObjects[1].x + intObjects[1].width &&
-      playerBottom <= intObjects[1].y && playerY >= intObjects[1].y - intObjects[1].height) && !playerOneButton) {
-      setPlayerOneButton(true);
-    }
-    if ((player2X + playerWidth >= intObjects[2].x && player2X <= intObjects[2].x + intObjects[2].width &&
-      player2Y - playerHeight <= intObjects[2].y && player2Y >= intObjects[2].y - intObjects[2].height) && !playerTwoButton) {
-      setPlayerTwoButton(true);
-    }
-    if (playerRight >= intObjects[3].x && playerX <= intObjects[3].x + intObjects[3].width &&
-      playerBottom <= intObjects[3].y && playerY >= intObjects[3].y - intObjects[3].height) {
-      setPlayerX(widthP(30));
-      setPlayerY(page3 + heightP(30));  
-      scrollOnePage();
-    }
-    if (playerRight >= intObjects[4].x && playerX <= intObjects[4].x + intObjects[4].width &&
-      playerBottom <= intObjects[4].y && playerY >= intObjects[4].y - intObjects[4].height) {
-        setPlayerX(widthP(30));
-        setPlayerY(page3 + heightP(30));  
-        scrollOnePage();
-    }
-  };
 
   const updateGame = () => {
     let newX = playerX;
@@ -372,7 +366,6 @@ const Game = () => {
 
   useEffect(() => {
     const gameLoop = setInterval(updateGame, 10); // Adjust interval as needed
-
     return () => {
       clearInterval(gameLoop);
     };
@@ -382,7 +375,6 @@ const Game = () => {
     // need to remove the timer
     if (playerOneButton && playerTwoButton) {
      
-      
       setPlayerX(widthP(50));
       setPlayerY(page2 + heightP(20));
       setPlayer2X(widthP(50));
@@ -397,24 +389,17 @@ const Game = () => {
         setPlayerOneButton(false);
         setPlayerTwoButton(false);
       }, 3000);
-
       setTimer(newTimer);
     }
   };
 
-
   useEffect(() => {
     checkButtonsAndAct();
-
     return () => {
       // Clear the timer when the component is unmounted or any button state changes
       clearTimeout(timer);
     };
   }, [playerOneButton, playerTwoButton]);
-
-
-
-
 
   const applyGravity = () => {
     let newY = playerY - gravity; // The player moves down due to gravity
@@ -555,19 +540,6 @@ const Game = () => {
             width: `${intObject.width}px`,
             height: `${intObject.height}px`,
             backgroundColor: 'yellow',
-          }}
-        />
-      ))}
-      {teleporters.map((teleporter, index) => (
-        <div
-          key={index}
-          style={{
-            position: 'absolute',
-            left: `${teleporter.x}px`,
-            bottom: `${teleporter.y}px`,
-            width: `${teleporter.width}px`,
-            height: `${teleporter.height}px`,
-            backgroundColor: 'blue',
           }}
         />
       ))}
