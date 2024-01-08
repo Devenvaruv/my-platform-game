@@ -28,6 +28,7 @@ const Game = () => {
   const [playerDimensions,setPlayerDimensions ] = useState((((1.3 * gameSize.height/3) + (gameSize.width)) * 0.01) / 32);
   const playerWidth = 32 * playerDimensions;// need to decide how much
   const playerHeight = 32 * playerDimensions;// need to decide how much
+  const [hasFlashlight, setHasFlashlight] = useState(false);
 
   const [currentFrame, setCurrentFrame] = useState(0); // The current frame index
 
@@ -94,11 +95,13 @@ const Game = () => {
   ];
 
   const intObjects = [
-    { x: widthP(0), y: page1 + heightP(0.5), width: widthP(3.25), height: heightP(10) - heightP(0.5) },//light switch 0
+    { x: widthP(0), y: page1 + heightP(0.5), width: widthP(3.25), height: heightP(10) - heightP(0.5) },//light switch/board 0
+    { x: widthP(96), y: page1 + heightP(60.5), width: widthP(3.25), height: heightP(10) - heightP(0.5) },
     { x: widthP(17.5), y: page2 + heightP(40) + heightP(0.5), width: widthP(2.5), height: heightP(5) }, //player1 button 
     { x: widthP(97.5), y: page2 + heightP(40) + heightP(0.5),  width: widthP(2.5), height: heightP(5)}, // player2 button 
     { x: widthP(22.5), y: page2 + heightP(0.5), width: widthP(0.3), height: heightP(7.5) - heightP(0.5) }, // door 1
     { x: widthP(77.2), y: page2 + heightP(0.5), width: widthP(0.3), height: heightP(7.5) - heightP(0.5) }, // door 2
+
   ]
 
   
@@ -116,21 +119,28 @@ const Game = () => {
       setPlayerY(page2 + heightP(97));
     }
     if ((playerRight >= intObjects[1].x && playerX <= intObjects[1].x + intObjects[1].width &&
-      playerBottom <= intObjects[1].y && playerY >= intObjects[1].y - intObjects[1].height) && !playerOneButton) {
+      playerBottom <= intObjects[1].y && playerY >= intObjects[1].y - intObjects[1].height) && !hasFlashlight) {
+        // optional change the img or add annimations
+      setHasFlashlight(true);
+    }
+
+    if ((playerRight >= intObjects[2].x && playerX <= intObjects[2].x + intObjects[2].width &&
+      playerBottom <= intObjects[2].y && playerY >= intObjects[2].y - intObjects[2].height) && !playerOneButton) {
       setPlayerOneButton(true);
     }
-    if ((player2X + playerWidth >= intObjects[2].x && player2X <= intObjects[2].x + intObjects[2].width &&
-      player2Y - playerHeight <= intObjects[2].y && player2Y >= intObjects[2].y - intObjects[2].height) && !playerTwoButton) {
+    if ((player2X + playerWidth >= intObjects[3].x && player2X <= intObjects[3].x + intObjects[3].width &&
+      player2Y - playerHeight <= intObjects[3].y && player2Y >= intObjects[3].y - intObjects[3].height) && !playerTwoButton) {
       setPlayerTwoButton(true);
     }
-    if (playerRight >= intObjects[3].x && playerX <= intObjects[3].x + intObjects[3].width &&
-      playerBottom <= intObjects[3].y && playerY >= intObjects[3].y - intObjects[3].height) {
+
+    if (playerRight >= intObjects[4].x && playerX <= intObjects[4].x + intObjects[4].width &&
+      playerBottom <= intObjects[4].y && playerY >= intObjects[4].y - intObjects[4].height) {
       setPlayerX(widthP(30));
       setPlayerY(page3 + heightP(30));  
       scrollOnePage();
     }
-    if (playerRight >= intObjects[4].x && playerX <= intObjects[4].x + intObjects[4].width &&
-      playerBottom <= intObjects[4].y && playerY >= intObjects[4].y - intObjects[4].height) {
+    if (playerRight >= intObjects[5].x && playerX <= intObjects[5].x + intObjects[5].width &&
+      playerBottom <= intObjects[5].y && playerY >= intObjects[5].y - intObjects[5].height) {
         setPlayerX(widthP(30));
         setPlayerY(page3 + heightP(30));  
         scrollOnePage();
@@ -367,29 +377,52 @@ const Game = () => {
   return (
     <div className={'no-scrollbar flashlight-on darkness-layer'} style={{ width: gameSize.width, height: gameSize.height }}>
 
+      {/* global components */}
+
       <div style={{ // darkness no2
         position: 'absolute',
         top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0, 0, 0, 0.6)', // Adjust the 0.5 to increase/decrease darkness
         zIndex: 1, // Ensure this is below interactive elements
-      }}></div>
+        }}>  
+      </div>
 
-      <div className="directional-flashlight" style={{
+      <div className='lit-square'style={{ position: 'absolute',
+        left: widthP(0),
+        bottom: page1 + heightP(90),
+        width: widthP(100),
+        height: heightP(10),}}>
+      </div>
+
+
+      {hasFlashlight && 
+        <div className="directional-flashlight" style={{
         position: 'absolute',
         left: `${(playerX + playerWidth / 2) - widthP(flashlightDirection)}px`,
         bottom: `${playerY - heightP(11)}px`,
         width: widthP(25),
         height: heightP(25),
         transform: `scaleX(${styleTransform})`,
-      }}></div>
+        }}></div>
+      }
 
-      <div className="flashlight-beam" style={{
+      {hasFlashlight ? 
+        <div className="flashlight-beam" style={{
         position: 'absolute',
         left: `${(playerX + playerWidth / 2) - widthP(flashlightDirection)}px`,
         bottom: `${playerY - heightP(11)}px`,
         width: widthP(25),
-        height: heightP(25), 
-        transform: `scaleX(${styleTransform})`,
-      }}></div>
+        height: heightP(25),
+        transform: `scaleX(${styleTransform})`,}}></div> 
+        : 
+        <div className="flashlight-beam" style={{
+        position: 'absolute',
+        left: widthP(73),
+        bottom: page1 + heightP(50),
+        width: widthP(25),
+        height: heightP(25),
+        transform: `scaleX(-1)`,}}>
+        </div>
+      }
 
       {graphs.map((graph, index) => (
         <div
@@ -405,14 +438,14 @@ const Game = () => {
         />
       ))}
 
-<PlayerSprite
+      <PlayerSprite
         playerX={playerX}
         playerY={playerY}
         moveDirection={moveDirection}
         frameIndex={currentFrame} // Pass the current frame index to the PlayerSprite component
-        scale={(((1.3 * gameSize.height/3) + (gameSize.width)) * 0.01) / 32}/>
-      
-    
+        scale={(((1.3 * gameSize.height / 3) + (gameSize.width)) * 0.01) / 32} 
+      />
+
       {/* <img
         src='https://i.pinimg.com/originals/9a/35/d6/9a35d6b50aaea74a80052640850d86d3.png' // Replace 'player-icon.png' with the path to your image
         alt='Player'
@@ -424,17 +457,7 @@ const Game = () => {
           height: playerHeight,
         }}
       /> */}
-      <img
-        src='./temp.png' // project img
-        alt='Player'
-        style={{
-          position: 'absolute',
-          left: widthP(20),
-          bottom: page2 + heightP(40),
-          width: widthP(60),
-          height: heightP(60),
-        }}
-      />
+      
       {/* <img
         src='./ds.jpg' // background image to be added
         alt='Playerx'
@@ -444,6 +467,7 @@ const Game = () => {
           bottom: page1 + heightP(0),
           width: widthP(100),
           height: heightP(100),
+          zIndex: '-1',
         }}
       /> */}
 
@@ -459,7 +483,8 @@ const Game = () => {
           height: widthP(1.6),
         }}
       />}
-       <Platform platforms={platforms} />
+
+      <Platform platforms={platforms} />
 
       {intObjects.map((intObject, index) => (
         <div
@@ -519,7 +544,6 @@ const Game = () => {
           height: heightP(0.1),
           lineHeight: heightP(0.1),
         }}>Contact</h3>
-
         <img
         src='./temp.png' // project img
         alt='PlayerPhoto1'
@@ -531,7 +555,6 @@ const Game = () => {
           height: heightP(35),
         }}
         />
-
         <img
         src='./temp.png' // project img
         alt='PlayerPhoto2'
@@ -544,7 +567,35 @@ const Game = () => {
         }}
         />
 
+      {/* page2 components */}
+      
+      <img className={false ? 'player-view' : ''}
+        src='./temp.png' // project img
+        alt='Player'
+        style={{
+          position: 'absolute',
+          left: widthP(20),
+          bottom: page2 + heightP(40),
+          width: widthP(60),
+          height: false ? heightP(55) :heightP(60),
+        }}
+      />
+      
+
+      {/* <img
+        src='./temp.png' // project img
+        alt='Player'
+        style={{
+          position: 'absolute',
+          left: widthP(20),
+          bottom: page2 + heightP(40),
+          width: widthP(60),
+          height: heightP(60),
+        }}
+      /> */}
+
       {/* page3 components */}
+
       <p
         style={{
           position: 'absolute',
@@ -554,6 +605,16 @@ const Game = () => {
           height: widthP(1.6),
         }}
       > Thank you so much for playing my game/viewing my portfolio/visiting my website/waisting your time</p>
+
+<p
+        style={{
+          position: 'absolute',
+          left: widthP(30),
+          bottom: page3 + heightP(60),
+          width: widthP(60),
+          height: widthP(1.6),
+        }}
+      > Im proud of you and dont let anyone else ever tell you otherwise</p>
 
       </div>
   );
@@ -568,8 +629,8 @@ export default Game;
 
 
 
-// electric board: x= 65% of 0.5 unit, y = 1 unit
-// trapdoor: x= 35% of 0.5 unit + 15% of  other 0.5 unit
+// electric board: x= 65% of 0.5 unit, y = 1 unit Done
+// trapdoor: x= 35% of 0.5 unit + 15% of  other 0.5 unit not needed
 
 // staircase: x= 2nd unit
 
@@ -581,7 +642,7 @@ export default Game;
 
 // make the website completely resposive done
 // start drawing the game icons and logos
-// make the character spritesheet
+// make the character spritesheet Done
 // add the standard website things such as headers and stuff
 // add layers to give the illusion of darkness done
 
@@ -592,15 +653,21 @@ export default Game;
 // add flashlight done
 
 // tmr lerm how to draw pixel art. or draw a original character spritesheet, but i guess learning how to draw pixel art would help.
-// make the flashlight spawn at other place then pick it up and then only it follows the player
+// make the flashlight spawn at other place then pick it up and then only it follows the player DDDDDOOOOOONNNNNNNEEEEEEE
 
 // add a pixel theme checkbox on the bottom right corner of the screen && maybe also add a character that uses chatgpt to answer some questions
 
 // add achivements on the top left corner same text as the promp box on the bottom
 
 // add subtitles for movies and decide on the width and height for the current project. 
-
+// whenever i save anything on the if the player is on page 3 it will move to page 2?
 // learn more about layers and once the player complelets the maze add made by. on the left side. source code, see live.
+
+// add flashlight logic for up and down
+// remove border width
+
+
+// make a fake home page and show it for 3 seconds before reavling the game
 
 // try to do some work// i now you have been feeling kinda low but we need to catch up and feel better about ourself.
 
@@ -660,7 +727,7 @@ export default Game;
         height: `${32}px`,
         backgroundImage: 'url(./temps.png)', // Update the path to your spritesheet
         // backgroundRepeat: 'no-repeat',
-        // animation: `spriteAnimation 1s steps(${numberOfFrames - 1}) infinite`
+        // animation: `spriteAnimation 1s steps(${numberOfFrames - 1}) infinite` // for looping animations
       }}
       
     /> */}
