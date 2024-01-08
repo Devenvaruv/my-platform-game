@@ -1,0 +1,5 @@
+@keyframes spriteAnimation {
+    from { background-position: 0px; }
+    to { background-position: -512px; } /* Replace with the total width of all frames combined */
+  }
+  

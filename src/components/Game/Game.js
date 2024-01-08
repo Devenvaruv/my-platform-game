@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './Game.css'
 import Ladder from '../Ladder/Ladder';
 import Platform, { generatePlatforms } from '../Platform/Platform';
+import PlayerSprite from '../PlayerSprite/PlayerSprite';
 
 const Game = () => {
   const [gameSize, setGameSize] = useState({ width: document.documentElement.clientWidth, height: document.documentElement.clientHeight * 3 }); // 729.60 px // 1536 px
@@ -12,8 +13,6 @@ const Game = () => {
   const page2 = document.documentElement.clientHeight;
   const page1 = document.documentElement.clientHeight * 2;
   const gravity = heightP(1); // need to decide how much
-  const playerWidth = widthP(1.6);// need to decide how much
-  const playerHeight = widthP(1.6);// need to decide how much
   const [playerX, setPlayerX] = useState(widthP(23));// starting position
   const [playerY, setPlayerY] = useState(page1 + heightP(92));
   const [player2X, setPlayer2X] = useState(widthP(97));
@@ -26,6 +25,19 @@ const Game = () => {
   const [playerDirection, setPlayerDirection] = useState('right');
   const [styleTransform, setStyleTransform] = useState(-1); // inverse
   const [flashlightDirection, setFlashlightDirection] = useState(25); // inverse plus widht of the flashlight, need to change
+  const [playerDimensions,setPlayerDimensions ] = useState((((1.3 * gameSize.height/3) + (gameSize.width)) * 0.01) / 32);
+  const playerWidth = 32 * playerDimensions;// need to decide how much
+  const playerHeight = 32 * playerDimensions;// need to decide how much
+
+  const [currentFrame, setCurrentFrame] = useState(0); // The current frame index
+
+  const directionFrameMap = {
+    right: 0, // Frames 0 to 3
+    up: 4,   // Frames 4 to 7
+    left: 8, // Frames 8 to 11
+    down: 12  // Frames 12 to 15
+  };
+  
 
   const platforms = generatePlatforms(widthP, heightP, page1, page2, page3);
 
@@ -132,6 +144,17 @@ const Game = () => {
     });
   };
 
+  const advanceFrame = (direction) => {
+    setCurrentFrame((prevFrame) => {
+      // Find the starting frame for the current direction
+      const startFrame = directionFrameMap[direction];
+      // Calculate the next frame in the current animation sequence
+      const nextFrame = startFrame + ((prevFrame - startFrame + 1) % 4);
+      return nextFrame;
+    });
+  };
+
+
   useEffect(() => {
     // need to figure out how to remove it
     const lightY = gameSize.height - playerY;
@@ -147,6 +170,7 @@ const Game = () => {
       setPlayerY(playerY * document.documentElement.clientHeight * 3/gameSize.height);
       setPlayer2X(player2X * document.documentElement.clientWidth/gameSize.width)
       setPlayer2Y(player2Y * document.documentElement.clientHeight * 3/gameSize.height);
+      setPlayerDimensions((((1.3 * document.documentElement.clientHeight) + (document.documentElement.clientWidth)) * 0.01) / 32)
     };
     window.addEventListener('resize', handleResize);
     return () => {
@@ -186,6 +210,10 @@ const Game = () => {
   }, []);
 
   const updateGame = () => {
+    console.log(((Math.min(gameSize.width , (gameSize.height/3))) * 0.050) / 32 );
+    console.log("dead");
+    console.log(playerHeight)
+
     let newX = playerX;
     let newY = playerY;
 
@@ -198,20 +226,24 @@ const Game = () => {
         setFlashlightDirection(25);// acording to widthP of flashlight
         setStyleTransform(-1);// we flip the css then start it at minus widthP
         new2X = Math.min(widthP(100) - playerWidth - borderWidth * 2, player2X + 10);
+        advanceFrame('left');
         break;
       case 'ArrowRight':
         newX = Math.min(widthP(100) - playerWidth - borderWidth * 2, playerX + 10);
         setFlashlightDirection(0);
         setStyleTransform(1);
         new2X = Math.max(borderWidth, player2X - 10);
+        advanceFrame('right');
         break;
       case 'ArrowDown':
         newY = Math.max(borderWidth, playerY - 10);
         new2Y = Math.min(gameSize.height - playerHeight - borderWidth * 2, player2Y + 10);
+        advanceFrame('down')
         break;
       case 'ArrowUp':
         newY = Math.min(gameSize.height - playerHeight - borderWidth * 2, playerY + 10);
         new2Y = Math.max(borderWidth, player2Y - 10);
+        advanceFrame('up')
         break;
       default:
         break;
@@ -267,11 +299,11 @@ const Game = () => {
   };
 
   useEffect(() => {
-    const gameLoop = setInterval(updateGame, 10); // Adjust interval as needed
+    const gameLoop = setInterval(updateGame, 50); // Adjust interval as needed
     return () => {
       clearInterval(gameLoop);
     };
-  }, [playerX, playerY, moveDirection, gameSize, playerWidth, playerHeight, styleTransform, flashlightDirection]);
+  }, [playerX, playerY, moveDirection, gameSize, playerWidth, playerHeight, styleTransform, flashlightDirection, currentFrame]);
 
   const checkButtonsAndAct = () => {
     // need to remove the timer
@@ -372,7 +404,16 @@ const Game = () => {
           }}
         />
       ))}
-      <img
+
+<PlayerSprite
+        playerX={playerX}
+        playerY={playerY}
+        moveDirection={moveDirection}
+        frameIndex={currentFrame} // Pass the current frame index to the PlayerSprite component
+        scale={(((1.3 * gameSize.height/3) + (gameSize.width)) * 0.01) / 32}/>
+      
+    
+      {/* <img
         src='https://i.pinimg.com/originals/9a/35/d6/9a35d6b50aaea74a80052640850d86d3.png' // Replace 'player-icon.png' with the path to your image
         alt='Player'
         style={{
@@ -382,7 +423,7 @@ const Game = () => {
           width: playerWidth,
           height: playerHeight,
         }}
-      />
+      /> */}
       <img
         src='./temp.png' // project img
         alt='Player'
@@ -609,6 +650,20 @@ export default Game;
         width: widthP(1),
         height: heightP(1),
       }}></div> */}
+
+       {/* <div
+      style={{
+        position: 'absolute',
+        left: `${100}px`,
+        bottom: `${100}px`,
+        width: `${80}px`,
+        height: `${32}px`,
+        backgroundImage: 'url(./temps.png)', // Update the path to your spritesheet
+        // backgroundRepeat: 'no-repeat',
+        // animation: `spriteAnimation 1s steps(${numberOfFrames - 1}) infinite`
+      }}
+      
+    /> */}
 
 
 
