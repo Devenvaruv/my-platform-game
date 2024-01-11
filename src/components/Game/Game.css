@@ -52,7 +52,7 @@ html{
 
 .flashlight-on { /* change 0% to increase intensity of light*/
   background: radial-gradient(circle at var(--lightX) var(--lightY), 
-              rgba(255, 255, 255, 0.9) 00%, 
+              rgba(255, 255, 255, 0.9) 100%, 
               rgba(0, 0, 0, 0.95) 0%);
             
 } 
@@ -64,13 +64,7 @@ html{
 }
 
 
-.flashlight-beam {
-  position: absolute;
-  clip-path: polygon(0% 50%, 100% 0%, 100% 100%);
-  border-radius: 50% / 70%; 
-  background: linear-gradient(to right, rgba(255, 255, 255, 0.9) 0%, rgba(0, 0, 0, 0) 100%);
-  pointer-events: none; 
-}
+
 
 
 .lit-square {
@@ -82,11 +76,8 @@ html{
 
 
 .player-view {
-  /* Position the image absolutely to control its placement */
-  
-  
-  /* Create perspective effect */
-  transform: perspective(1000px) rotateX(-15deg);
+ 
+  transform: perspective(1000px) rotateX(-20deg);
   
   /* Ensure the image stays within the frame during the perspective transformation */
   transform-origin: bottom center;
@@ -95,19 +86,51 @@ html{
   border: 5px solid #fff;
   
   /* Optional: add a shadow to simulate the ambient light of the theater */
-  box-shadow: 0px 0px 30px 20px rgba(0, 0, 0, 0.7);
+  box-shadow: 0px 0px 50px 30px rgba(0, 0, 0, 0.8);
+  z-index: 1;
+}
+
+.side-view {
+  /* Position the side screens absolutely to control their placement */
+  position: absolute;
+  /* Create the same perspective effect as the main screen */
+  transform: perspective(1000px)  rotateX(20deg);
   
-  /* Optional: to create the feeling of rows of seats, we can use a pseudo-element */
-  &:before {
-    content: '';
-    display: block;
-    position: absolute;
-    bottom: -50px; /* Adjust based on the image and desired effect */
-    left: 0;
-    width: 100%;
-    height: 50px;
-    background: rgba(0, 0, 0, 0.8); /* Simulate the dark foreground of a theater */
-    border-radius: 50%;
-    box-shadow: 0 30px 30px rgba(0, 0, 0, 0.9); /* Add soft shadow to mimic ambient darkness */
-  }
+  transform-origin: center left; /* Pivot from the center left for the left screen */
+
+  /* Add similar styling as the main screen for consistency */
+  border: 5px solid #fff;
+  box-shadow: 0px 0px 50px 30px rgba(0, 0, 0, 0.8);
+  z-index: 1;
+}
+
+.side-view.right {
+  /* Pivot from the center right for the right screen */
+  transform-origin: center right;
+  transform: perspective(1000px) rotateY(-10deg) rotateX(10deg);
+  
+}
+
+.side-view.left {
+  transform: perspective(1000px) rotateX(-20deg);
+  
+  /* Ensure the image stays within the frame during the perspective transformation */
+  transform-origin: bottom center;
+  z-index: 1;
+}
+
+.left {
+  transform: perspective(1000px) rotateX(-45deg) rotateY(-45deg);
+  
+  /* Ensure the image stays within the frame during the perspective transformation */
+  transform-origin: bottom center;
+  z-index: 1;
+}
+
+.right {
+  transform: perspective(1000px) rotateX(-20deg) rotateY(-45deg);
+  
+  /* Ensure the image stays within the frame during the perspective transformation */
+  transform-origin: 0px;
+  z-index: 1;
 }
