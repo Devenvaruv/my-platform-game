@@ -14,7 +14,7 @@ const Game = () => {
   const page1 = document.documentElement.clientHeight * 2;
   const gravity = heightP(1); // need to decide how much
   const [playerX, setPlayerX] = useState(widthP(23));// starting position
-  const [playerY, setPlayerY] = useState(page2 + heightP(30));
+  const [playerY, setPlayerY] = useState(page1 + heightP(91));
   const [player2X, setPlayer2X] = useState(widthP(97));
   const [player2Y, setPlayer2Y] = useState(page2 + heightP(95));
   const [lightSwitch, setLightSwitch] = useState(false);
