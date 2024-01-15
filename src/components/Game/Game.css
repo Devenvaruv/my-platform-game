@@ -52,7 +52,7 @@ html{
 
 .flashlight-on { /* change 0% to increase intensity of light*/
   background: radial-gradient(circle at var(--lightX) var(--lightY), 
-              rgba(255, 255, 255, 0.9) 100%, 
+              rgba(255, 255, 255, 0.9) 00%, 
               rgba(0, 0, 0, 0.95) 0%);
             
 } 
