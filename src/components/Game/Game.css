@@ -38,6 +38,16 @@ body, html{
   z-index: 11;
 }
 
+<<<<<<< HEAD
+=======
+
+.flashlight-on { /* change 0% to increase intensity of light*/
+  background: radial-gradient(circle at var(--lightX) var(--lightY), 
+              rgba(255, 255, 255, 0.9) 10%, 
+              rgba(0, 0, 0, 0.95) 0%);
+            
+} 
+>>>>>>> d10e8c6ad03636353715d96558d4f982d9f84bbc
 .darkness-layer { /* this does not work. need to tweak*/
   position: absolute;
   background-color: rgba(0, 0, 0, 0.95); /* Adjust opacity as needed */

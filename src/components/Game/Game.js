@@ -15,7 +15,9 @@ const Game = () => {
   const page1 = document.documentElement.clientHeight * 2;
   const gravity = heightP(1); // need to decide how much
   const [playerX, setPlayerX] = useState(widthP(23));// starting position
-  const [playerY, setPlayerY] = useState(page1 + heightP(92));
+
+  const [playerY, setPlayerY] = useState(page1 + heightP(91));
+
   const [player2X, setPlayer2X] = useState(widthP(97));
   const [player2Y, setPlayer2Y] = useState(page2 + heightP(95));
   const [lightSwitch, setLightSwitch] = useState(false);
@@ -695,3 +697,122 @@ const Game = () => {
 
 export default Game;
 
+<<<<<<< HEAD
+=======
+// FOR Header: devweber = 2 unit home work contact 3 unit from last Done
+
+
+// Ladder: x = last 3rd unit other half 25% unit Done
+
+
+
+// electric board: x= 65% of 0.5 unit, y = 1 unit Done
+// trapdoor: x= 35% of 0.5 unit + 15% of  other 0.5 unit not needed
+
+// staircase: x= 2nd unit
+
+// to do for tomorrow: make page2 maze
+
+
+// tmr make the yellow button finctional and make a seat for the player done
+// make the door functional? done
+
+// make the website completely resposive done
+// start drawing the game icons and logos
+// make the character spritesheet Done
+// add the standard website things such as headers and stuff
+// add layers to give the illusion of darkness done
+
+
+
+// level 2
+// animations? 
+// add flashlight done
+
+// tmr lerm how to draw pixel art. or draw a original character spritesheet, but i guess learning how to draw pixel art would help.
+// make the flashlight spawn at other place then pick it up and then only it follows the player DDDDDOOOOOONNNNNNNEEEEEEE
+
+// add a pixel theme checkbox on the bottom right corner of the screen && maybe also add a character that uses chatgpt to answer some questions
+
+// add achivements on the top left corner same text as the promp box on the bottom
+
+// add subtitles for movies and decide on the width and height for the current project. 
+// whenever i save anything on the if the player is on page 3 it will move to page 2?
+// learn more about layers and once the player complelets the maze add made by. on the left side. source code, see live.
+
+// add flashlight logic for up and down
+// remove border width
+
+
+// make a fake home page and show it for 3 seconds before reavling the game
+
+// try to do some work// i now you have been feeling kinda low but we need to catch up and feel better about ourself.
+
+
+// to be used in future {/* <div class="lit-square" style={{
+//   position: 'absolute',
+//   left: widthP(70),
+//   bottom: heightP(30),
+//   width: widthP(56),
+//   height: heightP(5),
+// }}></div> */}
+
+{/* <div class="permanent-light" style={{
+        position: 'absolute',
+        left: widthP(70),// cool door effect. will use it for cinema doors uncrease width
+        bottom: heightP(30),
+        width: widthP(5),
+        height: heightP(5),
+      }}></div> */}
+{/* <div className="permanent-light" style={{
+        left: widthP(60),
+        bottom: heightP(20),//found darkness-layer soulution. hint bottom is without page1
+        width: widthP(1),
+        height: heightP(1),
+      }}></div>
+      <div className="permanent-light" style={{
+        left: widthP(61),
+        bottom: heightP(20),//found darkness-layer soulution. hint bottom is without page1
+        width: widthP(2),
+        height: heightP(2),
+      }}></div> */}
+// <div className="permanent-light" style={{
+//   position: "absolute",
+
+//   left:`${playerX}px`,
+//   bottom: `${playerY}px`,//found darkness-layer soulution. hint bottom is without page1
+//   width: widthP(6),
+//   height: heightP(15),
+// }}></div>
+
+
+
+
+{/* <div className='flashlight-beam'  style={{
+        left: widthP(60),
+        bottom: heightP(20),//found darkness-layer soulution. hint bottom is without page1
+        width: widthP(1),
+        height: heightP(1),
+      }}></div> */}
+
+{/* <div
+      style={{
+        position: 'absolute',
+        left: `${100}px`,
+        bottom: `${100}px`,
+        width: `${80}px`,
+        height: `${32}px`,
+        backgroundImage: 'url(./temps.png)', // Update the path to your spritesheet
+        // backgroundRepeat: 'no-repeat',
+        // animation: `spriteAnimation 1s steps(${numberOfFrames - 1}) infinite` // for looping animations
+      }}
+      
+    /> */}
+
+
+
+// amimations
+// wake up animation, ladder animation, generator animation.
+
+// have adunince in the teather talk about the made by and with source code and see live. 
+>>>>>>> d10e8c6ad03636353715d96558d4f982d9f84bbc
