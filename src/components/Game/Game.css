@@ -1,5 +1,4 @@
-body,
-html{
+body, html{
   margin: 0;
   padding: 0;
   /* This ensures that the body takes the full viewport */
@@ -13,11 +12,12 @@ html{
 .no-scrollbar {
   position: relative;
   width: 100%; /* Full width of its parent */
-  height: 200%; /* Double the height of its parent */
+  height: 100%; /* Double the height of its parent */
   -ms-overflow-style: none;  
   scrollbar-width: none;  
   overflow-y: auto; 
 } 
+
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
@@ -26,17 +26,6 @@ html{
   background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(0, 0, 0, 0) 70%);
   pointer-events: none;
   z-index: -1; /* Adjust if needed to ensure it's above other elements */
-}
-
-.directional-flashlight {
-  position: absolute; 
-  left: 10000px;/* used to despawn the light out og exsistence*/
-  clip-path: polygon(0% 50%, 100% 0%, 100% 100%);
-  background: linear-gradient(to right, rgba(255, 255, 255, 0.5) 0%, rgba(0, 0, 0, 0) 100%);
-  border-radius: 50% / 70%; 
-  pointer-events: none;
-  z-index: 100; /* remove this to create flashlight-beam */
- 
 }
 
 .light-source {
@@ -49,13 +38,6 @@ html{
   z-index: 11;
 }
 
-
-.flashlight-on { /* change 0% to increase intensity of light*/
-  background: radial-gradient(circle at var(--lightX) var(--lightY), 
-              rgba(255, 255, 255, 0.9) 100%, 
-              rgba(0, 0, 0, 0.95) 0%);
-            
-} 
 .darkness-layer { /* this does not work. need to tweak*/
   position: absolute;
   background-color: rgba(0, 0, 0, 0.95); /* Adjust opacity as needed */
@@ -64,16 +46,11 @@ html{
 }
 
 
-
-
-
 .lit-square {
   /* Rectangle light */
   position: absolute;
-  background: linear-gradient(to top, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.8) 100%);
- 
+  background: linear-gradient(to top, rgba(255, 255, 255, 0) 0%,  rgba(66, 76, 125, 0.8) 100%);
 }
-
 
 .player-view {
  
@@ -90,47 +67,53 @@ html{
   z-index: 1;
 }
 
-.side-view {
-  /* Position the side screens absolutely to control their placement */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+.darkness-layerrr {
   position: absolute;
-  /* Create the same perspective effect as the main screen */
-  transform: perspective(1000px)  rotateX(20deg);
-  
-  transform-origin: center left; /* Pivot from the center left for the left screen */
+  top: 0;
+  left: 0;
+  width: 10vh; 
+  height: 10vh; 
+  background-color: rgba(0, 0, 0, 0.7); 
+  mask-image: url('../public/maaks-sprite.png');
+  mask-size: cover;
+  mask-position: center;
+} */
 
-  /* Add similar styling as the main screen for consistency */
-  border: 5px solid #fff;
-  box-shadow: 0px 0px 50px 30px rgba(0, 0, 0, 0.8);
-  z-index: 1;
-}
-
-.side-view.right {
-  /* Pivot from the center right for the right screen */
-  transform-origin: center right;
-  transform: perspective(1000px) rotateY(-10deg) rotateX(10deg);
-  
-}
-
-.side-view.left {
-  transform: perspective(1000px) rotateX(-20deg);
-  
-  /* Ensure the image stays within the frame during the perspective transformation */
-  transform-origin: bottom center;
-  z-index: 1;
-}
-
-.left {
-  transform: perspective(1000px) rotateX(-45deg) rotateY(-45deg);
-  
-  /* Ensure the image stays within the frame during the perspective transformation */
-  transform-origin: bottom center;
-  z-index: 1;
-}
-
-.right {
-  transform: perspective(1000px) rotateX(-20deg) rotateY(-45deg);
-  
-  /* Ensure the image stays within the frame during the perspective transformation */
-  transform-origin: 0px;
-  z-index: 1;
-}
+/* .mask-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 10vh; 
+  height: 10vh; 
+  background-image: url('../public/maaks-sprite.png');
+  background-size: cover;
+  background-position: center;
+} */

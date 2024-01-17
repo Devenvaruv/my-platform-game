@@ -1,3 +1,4 @@
+
 const Ladder = ({ x, y, width, height }) => (
     <div
       style={{
@@ -6,7 +7,11 @@ const Ladder = ({ x, y, width, height }) => (
         bottom: `${y}px`,
         width: `${width}px`,
         height: `${height}px`,
-        backgroundColor: 'green', // Different color for distinction
+        backgroundImage: 'url(./ladder-Sprite-0002.png)',
+        backgroundSize: 'contain',
+        backgroundRepeat: 'repeat',
+         
+       
       }}
     />
   );

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import './Game.css'
 import Ladder from '../Ladder/Ladder';
 import Platform, { generatePlatforms } from '../Platform/Platform';
 import PlayerSprite from '../PlayerSprite/PlayerSprite';
+
+import './Game.css'
 
 const Game = () => {
   const [gameSize, setGameSize] = useState({ width: document.documentElement.clientWidth, height: document.documentElement.clientHeight * 3 }); // 729.60 px // 1536 px
@@ -14,7 +15,7 @@ const Game = () => {
   const page1 = document.documentElement.clientHeight * 2;
   const gravity = heightP(1); // need to decide how much
   const [playerX, setPlayerX] = useState(widthP(23));// starting position
-  const [playerY, setPlayerY] = useState(page2 + heightP(30));
+  const [playerY, setPlayerY] = useState(page1 + heightP(92));
   const [player2X, setPlayer2X] = useState(widthP(97));
   const [player2Y, setPlayer2Y] = useState(page2 + heightP(95));
   const [lightSwitch, setLightSwitch] = useState(false);
@@ -22,12 +23,11 @@ const Game = () => {
   const [playerTwoButton, setPlayerTwoButton] = useState(false);
   const [timer, setTimer] = useState(null);
   const [moveDirection, setMoveDirection] = useState(null);
-  const [playerDirection, setPlayerDirection] = useState('right');
-
   const [flashlightTransform, setFlashlightTransform] = useState(-1); // inverse
-  const [flashlightDirection, setFlashlightDirection] = useState(25); // inverse plus widht of the flashlight, need to change
+  const [flashlightXDirection, setFlashlightXDirection] = useState(25); // inverse plus widht of the flashlight, need to change
   const [flashlightYDirection, setFlashlightYDirection] = useState(0);
   const [flashlightBackground, setFlashlightBackground] = useState();
+  const [flashlightBackground2, setFlashlightBackground2] = useState();
   const [flashlightClipPath, setFlashlightClipPath] = useState();
   const [playerDimensions, setPlayerDimensions] = useState((((1.3 * gameSize.height / 3) + (gameSize.width)) * 0.01) / 32);
   const playerWidth = 32 * playerDimensions;// need to decide how much
@@ -40,9 +40,9 @@ const Game = () => {
   const [sourceCodeLink, setSourceCodeLink] = useState(false);
   const [seeLiveLink, setSeeLiveLink] = useState(false);
   const [openLink, setOpenLink] = useState(false);
-
-
   const [currentFrame, setCurrentFrame] = useState(0); // The current frame index
+
+  const [currentflashlightFrame, setCurrentFlashlightFrame] = useState('left');
 
   const directionFrameMap = {
     right: 0, // Frames 0 to 3
@@ -50,7 +50,6 @@ const Game = () => {
     left: 8, // Frames 8 to 11
     down: 12  // Frames 12 to 15
   };
-
 
   const platforms = generatePlatforms(widthP, heightP, page1, page2, page3);
 
@@ -107,23 +106,19 @@ const Game = () => {
   ];
 
   const intObjects = [
-    { x: widthP(0), y: page1 + heightP(0.5), width: widthP(3.25), height: heightP(10) - heightP(0.5) },//light switch/board 0
-    { x: widthP(96), y: page1 + heightP(60.5), width: widthP(3.25), height: heightP(10) - heightP(0.5) },
+    { x: widthP(0), y: page1 + heightP(0.5), width: widthP(4.25), height: heightP(10) - heightP(0.5), backgroundImage: 'url(./electric-board-sprite.png)' },//light switch/board 0
+    { x: widthP(98), y: page1 + heightP(60.2), width: widthP(0.75), height: heightP(3) - heightP(0.5), backgroundImage: hasFlashlight? ' ': 'url(./flashlight_1-sprite.png)' }, //flashlight 
     { x: widthP(17.5), y: page2 + heightP(40) + heightP(0.5), width: widthP(2.5), height: heightP(5) }, //player1 button 
     { x: widthP(97.5), y: page2 + heightP(40) + heightP(0.5), width: widthP(2.5), height: heightP(5) }, // player2 button 
     { x: widthP(22.5), y: page2 + heightP(0.5), width: widthP(0.3), height: heightP(7.5) - heightP(0.5) }, // door 1
     { x: widthP(77.2), y: page2 + heightP(0.5), width: widthP(0.3), height: heightP(7.5) - heightP(0.5) }, // door 2
-    { x: widthP(50), y: page2 + heightP(11), width: widthP(3.3), height: heightP(3) }, //last row seat
-    { x: widthP(49), y: page2 + heightP(19), width: widthP(3.3), height: heightP(3) }, //middle row seat
-    { x: widthP(50), y: page2 + heightP(29), width: widthP(3.3), height: heightP(3) }, //first row seat
+    { x: widthP(50), y: page2 + heightP(11), width: widthP(3.3), height: heightP(3), backgroundImage: 'url(./cinema-test-sprite2.png)'  }, //last row seat
+    { x: widthP(49), y: page2 + heightP(19), width: widthP(3.3), height: heightP(3),backgroundImage: 'url(./cinema-test-sprite2.png)'  }, //middle row seat
+    { x: widthP(50), y: page2 + heightP(29), width: widthP(3.3), height: heightP(3),backgroundImage: 'url(./cinema-test-sprite2.png)'  }, //first row seat
     { x: widthP(83.5), y: page2 + heightP(22), width: widthP(14), height: heightP(6) }, //live
     { x: widthP(2), y: page2 + heightP(22), width: widthP(14), height: heightP(6) }, //sourcecode
-   
-
-
 
   ]
-
 
   const checkInteractions = () => {
 
@@ -200,9 +195,6 @@ const Game = () => {
       setEnterKeyallowed(false);
     }
 
-
-
-
   };
 
   const scrollOnePage = () => {
@@ -221,14 +213,6 @@ const Game = () => {
       return nextFrame;
     });
   };
-
-
-  useEffect(() => {
-    // need to figure out how to remove it
-    const lightY = gameSize.height - playerY;
-    document.documentElement.style.setProperty('--lightX', `${playerX}px`);
-    document.documentElement.style.setProperty('--lightY', `${lightY}px`);
-  }, [playerX, playerY, gameSize.height, playerDirection]);
 
   useEffect(() => {
     // need to add player resizes
@@ -255,11 +239,7 @@ const Game = () => {
         }
         setMoveDirection(e.key);
       }
-      if (e.key === 'ArrowLeft') {
-        setPlayerDirection('left');
-      } else if (e.key === 'ArrowRight') {
-        setPlayerDirection('right');
-      }
+      
       if ((e.key === 'F' || e.key === 'f') && hasFlashlight) {
         setToggleFlashlight(prevState => !prevState);
       }
@@ -297,42 +277,50 @@ const Game = () => {
     switch (moveDirection) {
       case 'ArrowLeft':
         newX = Math.max(borderWidth, playerX - widthP(.8)); // need to test and change
-        setFlashlightDirection(25);// acording to widthP of flashlight
+        setFlashlightXDirection(25);// acording to widthP of flashlight
         setFlashlightYDirection(0);
         setFlashlightTransform('scaleX(-1)');// we flip the css then start it at minus widthP
-        setFlashlightBackground('linear-gradient(to right, rgba(255, 255, 255, 0.9) 0%, rgba(0, 0, 0, 0) 100%)');
+        setFlashlightBackground('linear-gradient(to right, rgba(255, 255, 255, 0.8) 0%, rgba(0, 0, 0, 0) 100%)');
+        setFlashlightBackground2('linear-gradient(to right, rgba(66, 76, 125, 1) 0%, rgba(0, 0, 0, 0) 100%)')
         setFlashlightClipPath('polygon(0% 50%, 100% 0%, 100% 100%)');
         advanceFrame('left');
+        setCurrentFlashlightFrame('left')
         new2X = Math.min(widthP(100) - playerWidth - borderWidth * 2, player2X + 10);
         break;
       case 'ArrowRight':
         newX = Math.min(widthP(100) - playerWidth - borderWidth * 2, playerX + 10);
-        setFlashlightDirection(0);
+        setFlashlightXDirection(0);
         setFlashlightYDirection(0);
         setFlashlightTransform('scaleX(1)');
-        setFlashlightBackground('linear-gradient(to right, rgba(255, 255, 255, 0.9) 0%, rgba(0, 0, 0, 0) 100%)');
+        setFlashlightBackground('linear-gradient(to right, rgba(255, 255, 255, 0.8) 0%, rgba(0, 0, 0, 0) 100%)');
+        setFlashlightBackground2('linear-gradient(to right, rgba(66, 76, 125, 1) 0%, rgba(0, 0, 0, 0) 100%)')
         setFlashlightClipPath('polygon(0% 50%, 100% 0%, 100% 100%)')
         advanceFrame('right');
+        setCurrentFlashlightFrame('right')
         new2X = Math.max(borderWidth, player2X - 10);
         break;
       case 'ArrowDown':
         newY = Math.max(borderWidth, playerY - 10);
-        setFlashlightDirection(12.5);// acording to widthP of flashlight
-        setFlashlightYDirection(-12.5);
+        setFlashlightXDirection(12.5);// acording to widthP of flashlight
+        setFlashlightYDirection(10.5);
         setFlashlightTransform('scaleY(1)');
-        setFlashlightBackground('linear-gradient(to top, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.8) 100%)');
+        setFlashlightBackground('linear-gradient(to bottom, rgba(255, 255, 255, 0.8) 0%, rgba(0, 0, 0, 0) 100%)');
+        setFlashlightBackground2('linear-gradient(to bottom, rgba(66, 76, 125, 1) 0%, rgba(0, 0, 0, 0) 100%)')
         setFlashlightClipPath('polygon(50% 0%, 100% 100%, 0% 100%)');
         advanceFrame('down')
+        setCurrentFlashlightFrame('down')
         new2Y = Math.min(gameSize.height - playerHeight - borderWidth * 2, player2Y + 10);
         break;
       case 'ArrowUp':
         newY = Math.min(gameSize.height - playerHeight - borderWidth * 2, playerY + 10);
-        setFlashlightDirection(12.5);// acording to widthP of flashlight
-        setFlashlightYDirection(12.5);
+        setFlashlightXDirection(12.5);// acording to widthP of flashlight
+        setFlashlightYDirection(-21.5);
         setFlashlightTransform('scaleY(-1)');
-        setFlashlightBackground('linear-gradient(to top, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.8) 100%)');
+        setFlashlightBackground('linear-gradient(to bottom, rgba(255, 255, 255, 0.8) 0%, rgba(0, 0, 0, 0) 100%)');
+        setFlashlightBackground2('linear-gradient(to bottom, rgba(66, 76, 125, 1) 0%, rgba(0, 0, 0, 0) 100%)')
         setFlashlightClipPath('polygon(50% 0%, 100% 100%, 0% 100%)');
         advanceFrame('up')
+        setCurrentFlashlightFrame('up3')
         new2Y = Math.max(borderWidth, player2Y - 10);
         break;
       default:
@@ -393,7 +381,7 @@ const Game = () => {
     return () => {
       clearInterval(gameLoop);
     };
-  }, [playerX, playerY, moveDirection, gameSize, playerWidth, playerHeight, flashlightTransform, flashlightDirection, currentFrame]);
+  }, [playerX, playerY, moveDirection, gameSize, playerWidth, playerHeight, flashlightTransform, flashlightXDirection, currentFrame]);
 
   const checkButtonsAndAct = () => {
     // need to remove the timer
@@ -455,44 +443,45 @@ const Game = () => {
   };
 
   return (
-    <div className={'no-scrollbar flashlight-on darkness-layer'} style={{ width: gameSize.width, height: gameSize.height }}>
+    <div className={'no-scrollbar'} style={{ width: gameSize.width, height: gameSize.height }}>
 
       {/* global */}
 
-      <div style={{ // darkness no2
-        position: 'absolute',
-        top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0, 0, 0, 0.6)', // Adjust the 0.5 to increase/decrease darkness
-        zIndex: 1, // Ensure this is below interactive elements
+      <div style={{
+        position: 'relative',
+        width: gameSize.width,
+        height: gameSize.height,
+        backgroundColor: 'rgba(0, 0, 0, 0.99)',
+        maskImage: `url('./flashlight-${currentflashlightFrame}-sprite.png'), linear-gradient(black, black)`,
+        WebkitMaskImage: `url('./flashlight-${currentflashlightFrame}-sprite.png'), linear-gradient(black, black)`,
+        maskRepeat: 'no-repeat, repeat',
+        WebkitMaskComposite: 'destination-out',
+        maskComposite: 'exclude',
+        zIndex: '10',
+        maskPosition: `${(playerX + playerWidth / 2) - widthP(flashlightXDirection)}px ${gameSize.height - playerY - heightP(11.5) + heightP(flashlightYDirection)}px`,
+        maskSize: widthP(25),
       }}>
       </div>
 
-      <div className='lit-square' style={{
-        position: 'absolute',
-        left: widthP(0),
-        bottom: page1 + heightP(90),
-        width: widthP(100),
-        height: heightP(10),
-      }}>
-      </div>
 
       {toggleFlashlight && <>
         <div style={{
           position: 'absolute',
-          left: `${(playerX + playerWidth / 2) - widthP(flashlightDirection)}px`,
+          left: `${(playerX + playerWidth / 2) - widthP(flashlightXDirection)}px`,
           bottom: `${playerY - heightP(11) + heightP(flashlightYDirection)}px`,
           width: widthP(25),
           height: heightP(25),
           transform: flashlightTransform,
-          background: flashlightBackground,
-          clipPath: flashlightClipPath,
           borderRadius: '50% / 70%',
           pointerEvents: 'none',
-          zIndex: 100,
+          zIndex: 2,
+          background: flashlightBackground2,
+          clipPath: flashlightClipPath,
         }}>
         </div>
         <div style={{
           position: 'absolute',
-          left: `${(playerX + playerWidth / 2) - widthP(flashlightDirection)}px`,
+          left: `${(playerX + playerWidth / 2) - widthP(flashlightXDirection)}px`,
           bottom: `${playerY - heightP(11) + heightP(flashlightYDirection)}px`,
           width: widthP(25),
           height: heightP(25),
@@ -502,21 +491,19 @@ const Game = () => {
           borderRadius: '50% / 70%',
           pointerEvents: 'none',
         }}>
-        </div>
-      </>
+        </div></>
       }
 
-     
-
-      {!hasFlashlight &&
-        <div style={{
+      {!hasFlashlight && <div 
+        style={{
           position: 'absolute',
           left: widthP(73),
           bottom: page1 + heightP(50),
           width: widthP(25),
           height: heightP(25),
           transform: `scaleX(-1)`,
-          background: 'linear-gradient(to right, rgba(255, 255, 255, 0.9) 0%, rgba(0, 0, 0, 0) 100%)',
+          // background: 'linear-gradient(to right, #424c7d  0%, rgba(0, 0, 0, 0) 100%)',
+          background: 'linear-gradient(to right, rgba(66, 76, 125, 1) 0%, rgba(0, 0, 0, 0) 100%)',
           clipPath: 'polygon(0% 50%, 100% 0%, 100% 100%)',
           borderRadius: '50% / 70%',
           pointerEvents: 'none'
@@ -534,8 +521,31 @@ const Game = () => {
             width: `${graph.width}px`,
             height: `${graph.height}px`,
             backgroundColor: 'black',
+           
           }}
         />
+      ))}
+
+      <Platform platforms={platforms} />
+
+      {intObjects.map((intObject, index) => (
+        <div
+          key={index}
+          style={{
+            position: 'absolute',
+            left: `${intObject.x}px`,
+            bottom: `${intObject.y}px`,
+            width: `${intObject.width}px`,
+            height: `${intObject.height}px`,
+            backgroundImage: intObject.backgroundImage,
+            backgroundColor: intObject.backgroundImage ?  '' : 'yellow',
+            backgroundSize: 'contain',
+            backgroundRepeat: 'no-repeat',
+          }}
+        />
+      ))}
+      {ladders.map((ladder, index) => (
+        <Ladder key={index} {...ladder} />
       ))}
 
       <PlayerSprite
@@ -545,32 +555,6 @@ const Game = () => {
         frameIndex={currentFrame} // Pass the current frame index to the PlayerSprite component
         scale={(((1.3 * gameSize.height / 3) + (gameSize.width)) * 0.01) / 32}
       />
-
-      {/* <img
-        src='https://i.pinimg.com/originals/9a/35/d6/9a35d6b50aaea74a80052640850d86d3.png' // Replace 'player-icon.png' with the path to your image
-        alt='Player'
-        style={{
-          position: 'absolute',
-          left: `${playerX}px`,
-          bottom: `${playerY}px`,
-          width: playerWidth,
-          height: playerHeight,
-        }}
-      /> */}
-
-      {/* <img
-        src='./ds.jpg' // background image to be added
-        alt='Playerx'
-        style={{
-          position: 'absolute',
-          left: widthP(0),
-          bottom: page1 + heightP(0),
-          width: widthP(100),
-          height: heightP(100),
-          zIndex: '-1',
-        }}
-      /> */}
-
 
       {<img
         src='https://i.pinimg.com/originals/9a/35/d6/9a35d6b50aaea74a80052640850d86d3.png' // PLAYER 2
@@ -584,26 +568,17 @@ const Game = () => {
         }}
       />}
 
-      <Platform platforms={platforms} />
-
-      {intObjects.map((intObject, index) => (
-        <div
-          key={index}
-          style={{
-            position: 'absolute',
-            left: `${intObject.x}px`,
-            bottom: `${intObject.y}px`,
-            width: `${intObject.width}px`,
-            height: `${intObject.height}px`,
-            backgroundColor: 'yellow',
-          }}
-        />
-      ))}
-      {ladders.map((ladder, index) => (
-        <Ladder key={index} {...ladder} />
-      ))}
-
       {/* page 1 components */}
+
+      <div className='lit-square' style={{
+        position: 'absolute',
+        left: widthP(0),
+        bottom: page1 + heightP(90),
+        width: widthP(100),
+        height: heightP(10),
+        
+      }}>
+      </div>
 
       <h1 style={{
         position: 'absolute',
@@ -691,48 +666,7 @@ const Game = () => {
         }}> Source code</p>
       </>}
 
-       
-
-
-
-
-      {/* {cinnemaMode && <img className={' left'}
-        src='./temp.png' // project img
-        alt='Player'
-        style={{
-          position: 'absolute',
-          left: widthP(0 + 0.3),
-          bottom: page2 + heightP(40 + 0.5),
-          width: widthP(20 - 0.3),
-          height: heightP(55),
-        }}
-      />} */}
-      {/* 
-      {cinnemaMode && <img className={' right'}
-        src='./temp.png' // project img
-        alt='Player'
-        style={{
-          position: 'absolute',
-          left: widthP(80 + 0.3),
-          bottom: page2 + heightP(40 + 0.5),
-          width: widthP(15 - 0.3),
-          height: heightP(55),
-        }}
-      />} */}
-
-
-      {/* <img
-        src='./temp.png' // project img
-        alt='Player'
-        style={{
-          position: 'absolute',
-          left: widthP(20),
-          bottom: page2 + heightP(40),
-          width: widthP(60),
-          height: heightP(60),
-        }}
-      /> */}
-
+     
       {/* page3 components */}
 
       <p
@@ -753,7 +687,7 @@ const Game = () => {
           width: widthP(60),
           height: widthP(1.6),
         }}
-      > Im proud of you and dont let anyone else ever tell you otherwise</p>
+      > Im proud of you and dont let anyone else ever tell you otherwise, we are almost there; keep going</p>
 
     </div>
   );
@@ -761,119 +695,3 @@ const Game = () => {
 
 export default Game;
 
-// FOR Header: devweber = 2 unit home work contact 3 unit from last Done
-
-
-// Ladder: x = last 3rd unit other half 25% unit Done
-
-
-
-// electric board: x= 65% of 0.5 unit, y = 1 unit Done
-// trapdoor: x= 35% of 0.5 unit + 15% of  other 0.5 unit not needed
-
-// staircase: x= 2nd unit
-
-// to do for tomorrow: make page2 maze
-
-
-// tmr make the yellow button finctional and make a seat for the player done
-// make the door functional? done
-
-// make the website completely resposive done
-// start drawing the game icons and logos
-// make the character spritesheet Done
-// add the standard website things such as headers and stuff
-// add layers to give the illusion of darkness done
-
-
-
-// level 2
-// animations? 
-// add flashlight done
-
-// tmr lerm how to draw pixel art. or draw a original character spritesheet, but i guess learning how to draw pixel art would help.
-// make the flashlight spawn at other place then pick it up and then only it follows the player DDDDDOOOOOONNNNNNNEEEEEEE
-
-// add a pixel theme checkbox on the bottom right corner of the screen && maybe also add a character that uses chatgpt to answer some questions
-
-// add achivements on the top left corner same text as the promp box on the bottom
-
-// add subtitles for movies and decide on the width and height for the current project. 
-// whenever i save anything on the if the player is on page 3 it will move to page 2?
-// learn more about layers and once the player complelets the maze add made by. on the left side. source code, see live.
-
-// add flashlight logic for up and down
-// remove border width
-
-
-// make a fake home page and show it for 3 seconds before reavling the game
-
-// try to do some work// i now you have been feeling kinda low but we need to catch up and feel better about ourself.
-
-
-// to be used in future {/* <div class="lit-square" style={{
-//   position: 'absolute',
-//   left: widthP(70),
-//   bottom: heightP(30),
-//   width: widthP(56),
-//   height: heightP(5),
-// }}></div> */}
-
-{/* <div class="permanent-light" style={{
-        position: 'absolute',
-        left: widthP(70),// cool door effect. will use it for cinema doors uncrease width
-        bottom: heightP(30),
-        width: widthP(5),
-        height: heightP(5),
-      }}></div> */}
-{/* <div className="permanent-light" style={{
-        left: widthP(60),
-        bottom: heightP(20),//found darkness-layer soulution. hint bottom is without page1
-        width: widthP(1),
-        height: heightP(1),
-      }}></div>
-      <div className="permanent-light" style={{
-        left: widthP(61),
-        bottom: heightP(20),//found darkness-layer soulution. hint bottom is without page1
-        width: widthP(2),
-        height: heightP(2),
-      }}></div> */}
-// <div className="permanent-light" style={{
-//   position: "absolute",
-
-//   left:`${playerX}px`,
-//   bottom: `${playerY}px`,//found darkness-layer soulution. hint bottom is without page1
-//   width: widthP(6),
-//   height: heightP(15),
-// }}></div>
-
-
-
-
-{/* <div className='flashlight-beam'  style={{
-        left: widthP(60),
-        bottom: heightP(20),//found darkness-layer soulution. hint bottom is without page1
-        width: widthP(1),
-        height: heightP(1),
-      }}></div> */}
-
-{/* <div
-      style={{
-        position: 'absolute',
-        left: `${100}px`,
-        bottom: `${100}px`,
-        width: `${80}px`,
-        height: `${32}px`,
-        backgroundImage: 'url(./temps.png)', // Update the path to your spritesheet
-        // backgroundRepeat: 'no-repeat',
-        // animation: `spriteAnimation 1s steps(${numberOfFrames - 1}) infinite` // for looping animations
-      }}
-      
-    /> */}
-
-
-
-// amimations
-// wake up animation, ladder animation, generator animation.
-
-// have adunince in the teather talk about the made by and with source code and see live. 

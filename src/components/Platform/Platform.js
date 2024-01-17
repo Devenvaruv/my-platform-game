@@ -8,6 +8,9 @@ export const generatePlatforms = (widthP, heightP, page1, page2, page3) => {
           y: heightP(200) + index * (heightP(1)),
           width: widthP(1),
           height: heightP(1),
+          backgroundImage: 'url(./staircase-sprite.png)',
+        
+          
         };
       });
   return [
@@ -235,7 +238,9 @@ export const generatePlatforms = (widthP, heightP, page1, page2, page3) => {
 };
 
 const Platform = ({ platforms }) => {
+  console.log(platforms.at(-1))
   return (
+    
     <>
       {platforms.map((platform, index) => (
         <div
@@ -246,7 +251,12 @@ const Platform = ({ platforms }) => {
             bottom: `${platform.y}px`,
             width: `${platform.width}px`,
             height: `${platform.height}px`,
-            backgroundColor: 'red',
+            backgroundColor: index > 144? ' ': 'red' ,
+            backgroundImage: index > 144? 'url(./staircase-sprite.png)': 'url(./border-sprite.png)' ,
+            backgroundSize: 'contain',
+            backgroundRepeat: index > 144? 'no-repeat': 'repeat',
+            
+          
           }}
         />
       ))}
