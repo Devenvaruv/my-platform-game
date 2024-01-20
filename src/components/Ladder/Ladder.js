@@ -8,10 +8,8 @@ const Ladder = ({ x, y, width, height }) => (
         width: `${width}px`,
         height: `${height}px`,
         backgroundImage: 'url(./ladder-Sprite-0002.png)',
-        backgroundSize: 'contain',
-        backgroundRepeat: 'repeat',
-         
-       
+        
+        backgroundRepeat: 'no-repeat',
       }}
     />
   );
