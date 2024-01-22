@@ -33,6 +33,23 @@ body {
   display: none;
 }
 
+.player-view {
+ 
+  transform: perspective(1000px) rotateX(-20deg);
+  
+  /* Ensure the image stays within the frame during the perspective transformation */
+  transform-origin: bottom center;
+  
+  /* Optional: add a border to simulate a screen */
+  border: 5px solid #fff;
+  
+  /* Optional: add a shadow to simulate the ambient light of the theater */
+  box-shadow: 0px 0px 50px 30px rgba(0, 0, 0, 0.8);
+  z-index: 1;
+}
+
+
+
 .lit-circle {
   background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(0, 0, 0, 0) 70%);
   pointer-events: none;
@@ -63,20 +80,6 @@ body {
   background: linear-gradient(to top, rgba(255, 255, 255, 0) 0%,  rgba(66, 76, 125, 0.8) 100%);
 }
 
-.player-view {
- 
-  transform: perspective(1000px) rotateX(-20deg);
-  
-  /* Ensure the image stays within the frame during the perspective transformation */
-  transform-origin: bottom center;
-  
-  /* Optional: add a border to simulate a screen */
-  border: 5px solid #fff;
-  
-  /* Optional: add a shadow to simulate the ambient light of the theater */
-  box-shadow: 0px 0px 50px 30px rgba(0, 0, 0, 0.8);
-  z-index: 1;
-}
 
 
 

@@ -35,7 +35,7 @@ const Game = () => {
   const [hasFlashlight, setHasFlashlight] = useState(false);
   const [toggleFlashlight, setToggleFlashlight] = useState();
   const [cinnemaMode, setCinnemaMode] = useState(false);
-  const [currentMovies, setCurrentMovies] = useState(false);
+  const [currentMovies, setCurrentMovies] = useState('./brick-middle-test.png');
   const [enterKeyallowed, setEnterKeyallowed] = useState(false);
   const [sourceCodeLink, setSourceCodeLink] = useState(false);
   const [seeLiveLink, setSeeLiveLink] = useState(false);
@@ -111,9 +111,9 @@ const Game = () => {
     { x: widthP(97.5), y: page2 + heightP(40) + heightP(0.5), width: widthP(2.5), height: heightP(5) }, // player2 button 
     { x: widthP(22.5), y: page2 + heightP(0.5), width: widthP(0.3), height: heightP(7.5) - heightP(0.5) }, // door 1
     { x: widthP(77.2), y: page2 + heightP(0.5), width: widthP(0.3), height: heightP(7.5) - heightP(0.5) }, // door 2
-    { x: widthP(50), y: page2 + heightP(11), width: widthP(3.3), height: heightP(3), backgroundImage: 'url(./cinema-test-sprite2.png)'  }, //last row seat
-    { x: widthP(49), y: page2 + heightP(19), width: widthP(3.3), height: heightP(3),backgroundImage: 'url(./cinema-test-sprite2.png)'  }, //middle row seat
-    { x: widthP(50), y: page2 + heightP(29), width: widthP(3.3), height: heightP(3),backgroundImage: 'url(./cinema-test-sprite2.png)'  }, //first row seat
+    { x: widthP(51), y: page2 + heightP(11), width: widthP(3), height: heightP(3), backgroundImage: 'url(./chair2.png)'  }, //last row seat
+    { x: widthP(51), y: page2 + heightP(19), width: widthP(3), height: heightP(3),backgroundImage: 'url(./chair2.png)'  }, //middle row seat
+    { x: widthP(50), y: page2 + heightP(29), width: widthP(3), height: heightP(3),backgroundImage: 'url(./chair2.png)'  }, //first row seat
     { x: widthP(83.5), y: page2 + heightP(22), width: widthP(14), height: heightP(6) }, //live
     { x: widthP(2), y: page2 + heightP(22), width: widthP(14), height: heightP(6) }, //sourcecode
 
@@ -453,24 +453,20 @@ const Game = () => {
           position: "absolute",
           width: gameSize.width,
           height: gameSize.height,
-          backgroundColor: "rgba(0, 0, 0, 0.90)",
-          maskImage: `url('./flashlight-${
-            toggleFlashlight ? currentflashlightFrame : ""
-          }-sprite.png'), linear-gradient(black, black)`,
-          WebkitMaskImage: `url('./flashlight-${
-            toggleFlashlight ? currentflashlightFrame : ""
-          }-sprite.png'), linear-gradient(black, black)`,
+          backgroundColor: "rgba(0, 0, 0, 0.00)",
+          maskImage: `url('./flashlight-${toggleFlashlight ? currentflashlightFrame : ""
+            }-sprite.png'), linear-gradient(black, black)`,
+          WebkitMaskImage: `url('./flashlight-${toggleFlashlight ? currentflashlightFrame : ""
+            }-sprite.png'), linear-gradient(black, black)`,
           maskRepeat: "no-repeat, repeat",
           WebkitMaskComposite: "destination-out",
           maskComposite: "exclude",
           zIndex: "10",
-          maskPosition: `${
-            playerX + playerWidth / 2 - widthP(flashlightXDirection)
-          }px ${
-            gameSize.height -
+          maskPosition: `${playerX + playerWidth / 2 - widthP(flashlightXDirection)
+            }px ${gameSize.height -
             (playerY + playerHeight / 2) -
             heightP(flashlightYDirection)
-          }px`,
+            }px`,
           maskSize: `${widthP(25)}px ${heightP(25)}px`,
         }}
       ></div>
@@ -494,7 +490,7 @@ const Game = () => {
         ></div>
       )}
 
-      {/* {graphs.map((graph, index) => (
+      {graphs.map((graph, index) => (
         <div
           key={index}
           style={{
@@ -506,7 +502,7 @@ const Game = () => {
             backgroundColor: "black",
           }}
         />
-      ))} */}
+      ))} 
 
       <Platform platforms={platforms} />
 
@@ -553,30 +549,6 @@ const Game = () => {
       }
 
       {/* page 1 components */}
-
-      {/* <img
-        src="test-background.png" //testssat
-        alt="Player"
-        style={{
-          position: "absolute",
-          left: widthP(0),
-          bottom: page1 + heightP(0),
-          width: widthP(100),
-          height: heightP(90),
-          zIndex: -1,
-        }}
-      /> */}
-
-      {/* <div
-        className="lit-square"
-        style={{
-          position: "absolute",
-          left: widthP(0),
-          bottom: page1 + heightP(90),
-          width: widthP(100),
-          height: heightP(10),
-        }}
-      ></div> */}
 
 <div
   style={{
@@ -695,8 +667,6 @@ const Game = () => {
         Contact
       </h3>
 
-      
-
       <img
         src="./Frame_C-Wood_03-256x256.png" // project img
         alt="PlayerPhoto1"
@@ -714,14 +684,14 @@ const Game = () => {
         alt="PlayerPhoto2"
         style={{
           position: "absolute",
-          left: widthP(70),
+          left: widthP(69),
           bottom: page1 + heightP(30),
           width: widthP(30),
           height: heightP(20),
         }}
       />
 
-<img
+      <img
         src="./hanging-thing-sprite.png" // project img
         alt="PlayerPhoto2"
         style={{
@@ -733,36 +703,36 @@ const Game = () => {
         }}
       />
 
-<img
+      <img
         src="./torch--test.png" // project img
         alt="PlayerPhoto2"
         style={{
           position: "absolute",
           left: widthP(60),
           bottom: page1 + heightP(10),
-         
+
         }}
       />
 
-<img
+      <img
         src="./torch--test2.png" // project img
         alt="PlayerPhoto2"
         style={{
           position: "absolute",
           left: widthP(50),
           bottom: page1 + heightP(10),
-       
+
         }}
       />
 
-<img
+      <img
         src="./torch--test3.png" // project img
         alt="PlayerPhoto2"
         style={{
           position: "absolute",
           left: widthP(40),
           bottom: page1 + heightP(10),
-         
+
         }}
       />
 
@@ -781,9 +751,60 @@ const Game = () => {
         }}
       />
 
+      <div
+        style={{
+          position: "absolute",
+          left: widthP(0),
+          bottom: page2 + heightP(40),
+          width: widthP(100), // Set the desired width
+          height: heightP(60), // Set the desired height
+          backgroundImage: "url('sprite-0009.png')",
+          backgroundRepeat: 'repeat', // This makes the image repeat
+          zIndex: -1,
+        }}
+      />
+
+      <img
+        src="./carpet5.png" // project img
+        alt="PlayerPhoto1"
+        style={{
+          position: "absolute",
+          left: widthP(19),
+          bottom: page2 + heightP(0),
+          width: widthP(62), // Set the desired width
+          height: heightP(40), // Set the desired height
+          zIndex: -1,
+        }}
+      />
+
+      <img
+        src="./sun.png" // project img
+        alt="PlayerPhoto1"
+        style={{
+          position: "absolute",
+          left: widthP(0),
+          bottom: page2 + heightP(0),
+          width: widthP(19), // Set the desired width
+          height: heightP(40), // Set the desired height
+          zIndex: -1,
+        }}
+      />
+
+      <img
+        src="./moon.png" // project img
+        alt="PlayerPhoto1"
+        style={{
+          position: "absolute",
+          left: widthP(81),
+          bottom: page2 + heightP(0),
+          width: widthP(19), // Set the desired width
+          height: heightP(40), // Set the desired height
+          zIndex: -1,
+        }}
+      />
+
       {playerOneButton && playerTwoButton && (
         <>
-          {" "}
           <p
             style={{
               position: "absolute",
@@ -793,8 +814,7 @@ const Game = () => {
               height: heightP(5),
             }}
           >
-            {" "}
-            See Live
+           See Live
           </p>
           <p
             style={{
@@ -805,7 +825,7 @@ const Game = () => {
               height: heightP(5),
             }}
           >
-            {" "}
+          
             Source code
           </p>
         </>
@@ -822,9 +842,7 @@ const Game = () => {
           height: widthP(1.6),
         }}
       >
-        {" "}
-        Thank you so much for playing my game/viewing my portfolio/visiting my
-        website/waisting your time
+        {" Thank you so much for playing my game/viewing my portfolio/visiting my website/waisting your time "}
       </p>
 
       <p
@@ -836,9 +854,7 @@ const Game = () => {
           height: widthP(1.6),
         }}
       >
-        {" "}
-        Im proud of you and dont let anyone else ever tell you otherwise, we are
-        almost there; keep going
+        {"Im proud of you and dont let anyone else ever tell you otherwise, we are almost there; keep going"}
       </p>
     </div>
   );
@@ -846,4 +862,27 @@ const Game = () => {
 
 export default Game;
 
-// add chair strites
+//page 1 work-
+ /*make text white.
+  add photo to photo frame, decrease the photo frame border width and height
+  add different img based on light is on/off or a flashlight is being shinned on
+  add javascript/css/ etc icons to shields and add shields
+  add a 3 second timer to elelctric board 
+  add a animation to the character walking to the electric board
+  make own character sprite
+  add props
+ */
+
+// page 2 work-
+/* change default cinema background img
+   add button or teleporter sprite instead of yellow sqaure
+   fix or remove the 3 second timer function
+   remove yellow square and add circles with white or black border that flash with text in the center
+   have a press enter flashing sign on them as well
+   add door sprite/ or door opening sprites
+   add a white arrow on the seatable seats
+   add character or drinks or something on other seats
+   add or find some textures for the borders
+
+
+*/  
