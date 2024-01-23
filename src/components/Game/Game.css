@@ -50,35 +50,6 @@ body {
 
 
 
-.lit-circle {
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(0, 0, 0, 0) 70%);
-  pointer-events: none;
-  z-index: -1; /* Adjust if needed to ensure it's above other elements */
-}
-
-.light-source {
-  /* spotlight kinda like light */
-  position: absolute;
-  width: 200px; /* Adjust as needed */
-  height: 400px; /* Adjust as needed */
-  background: linear-gradient(to top, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.8) 100%);
-  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
-  z-index: 11;
-}
-
-.darkness-layer { /* this does not work. need to tweak*/
-  position: absolute;
-  background-color: rgba(0, 0, 0, 0.95); /* Adjust opacity as needed */
-  pointer-events: none; /* Ensures clicks pass through the layer */
-  z-index: 10; /* Ensure it's above the game, but below the UI elements */
-}
-
-
-.lit-square {
-  /* Rectangle light */
-  position: absolute;
-  background: linear-gradient(to top, rgba(255, 255, 255, 0) 0%,  rgba(66, 76, 125, 0.8) 100%);
-}
 
 
 

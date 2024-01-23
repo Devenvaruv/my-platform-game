@@ -14,26 +14,25 @@ const Game = () => {
   const page2 = document.documentElement.clientHeight;
   const page1 = document.documentElement.clientHeight * 2;
   const gravity = heightP(1); // need to decide how much
+  const [playerDimensions, setPlayerDimensions] = useState((((1.3 * gameSize.height / 3) + (gameSize.width)) * 0.01) / 32);
+  const playerWidth = 32 * playerDimensions;// need to decide how much
+  const playerHeight = 32 * playerDimensions;// need to decide how much
   const [playerX, setPlayerX] = useState(widthP(23));// starting position
   const [playerY, setPlayerY] = useState(page1 + heightP(91));
   const [player2X, setPlayer2X] = useState(widthP(97));
   const [player2Y, setPlayer2Y] = useState(page2 + heightP(95));
-  const [lightSwitch, setLightSwitch] = useState(false);
-  const [playerOneButton, setPlayerOneButton] = useState(false);
-  const [playerTwoButton, setPlayerTwoButton] = useState(false);
+ 
   const [timer, setTimer] = useState(null);
   const [moveDirection, setMoveDirection] = useState(null);
-  const [flashlightTransform, setFlashlightTransform] = useState(-1); // inverse
+
   const [flashlightXDirection, setFlashlightXDirection] = useState(25); // inverse plus widht of the flashlight, need to change
   const [flashlightYDirection, setFlashlightYDirection] = useState(0);
-  const [flashlightBackground, setFlashlightBackground] = useState();
-  const [flashlightBackground2, setFlashlightBackground2] = useState();
-  const [flashlightClipPath, setFlashlightClipPath] = useState();
-  const [playerDimensions, setPlayerDimensions] = useState((((1.3 * gameSize.height / 3) + (gameSize.width)) * 0.01) / 32);
-  const playerWidth = 32 * playerDimensions;// need to decide how much
-  const playerHeight = 32 * playerDimensions;// need to decide how much
   const [hasFlashlight, setHasFlashlight] = useState(false);
   const [toggleFlashlight, setToggleFlashlight] = useState();
+  
+  const [electricBoardSwitch, setElectricBoardSwitch] = useState(false);
+  const [playerOneButton, setPlayerOneButton] = useState(false);
+  const [playerTwoButton, setPlayerTwoButton] = useState(false);
   const [cinnemaMode, setCinnemaMode] = useState(false);
   const [currentMovies, setCurrentMovies] = useState('./brick-middle-test.png');
   const [enterKeyallowed, setEnterKeyallowed] = useState(false);
@@ -41,7 +40,7 @@ const Game = () => {
   const [seeLiveLink, setSeeLiveLink] = useState(false);
   const [openLink, setOpenLink] = useState(false);
   const [currentFrame, setCurrentFrame] = useState(0); // The current frame index
-  const [currentflashlightFrame, setCurrentFlashlightFrame] = useState('left');
+  const [currentFlashlightFrame, setCurrentFlashlightFrame] = useState('left');
 
   const directionFrameMap = {
     right: 0, // Frames 0 to 3
@@ -104,18 +103,38 @@ const Game = () => {
     { x: widthP(75.5), y: page1 + heightP(60), width: widthP(2.5), height: heightP(30) + platforms[1].height },
   ];
 
+  const bImages = [
+    //page 1
+    { x: widthP(1), y: page1 + heightP(99), width: widthP(98), height: heightP(1), backgroundImage: "url('brick-top.png')" },
+    { x: widthP(0), y: page1 + heightP(0), width: widthP(100), height: heightP(90), backgroundImage: "url('test-background.png')" },
+    { x: widthP(99), y: page1 + heightP(0), width: widthP(1), height: heightP(100), backgroundImage: "url('brick-right.png')" }, 
+    { x: widthP(0), y: page1 + heightP(0), width: widthP(1), height: heightP(100), backgroundImage: "url('brick-left.png')" },
+    { x: widthP(1), y: page1 + heightP(90), width: widthP(98), height: heightP(9), backgroundImage: "url('page-one-top-middle-background.png')" },
+    //page2
+    { x: widthP(0), y: page2 + heightP(40), width: widthP(100), height: heightP(60), backgroundImage: "url('sprite-0009.png')" },
+
+  ]
+
+  const imageProps = [
+    { x: widthP(10), y: page1 + heightP(45), width: widthP(19), height: heightP(35), backgroundImage: "/Frame_C-Wood_03-256x256.png", zIndex: 1 },
+    { x: widthP(69), y: page1 + heightP(30), width: widthP(30), height: heightP(20), backgroundImage: "/Frame_C-Wood_03-256x256.png", zIndex: 1 },
+    { x: widthP(19), y: page2 + heightP(0), width: widthP(62), height: heightP(40), backgroundImage: "/carpet5.png", zIndex: -1 },
+    { x: widthP(0), y: page2 + heightP(0), width: widthP(19), height: heightP(40), backgroundImage: "/sun.png", zIndex: -1 },
+    { x: widthP(81), y: page2 + heightP(0), width: widthP(19), height: heightP(40), backgroundImage: "/moon.png", zIndex: -1 },
+  ]
+
   const intObjects = [
-    { x: widthP(1), y: page1 + heightP(0.8), width: widthP(4.25), height: heightP(10) - heightP(0.5), backgroundImage: 'url(./electric-board-sprite.png)' },//light switch/board 0
-    { x: widthP(98), y: page1 + heightP(60.2), width: widthP(0.75), height: heightP(3) - heightP(0.5), backgroundImage: hasFlashlight? ' ': 'url(./flashlight_1-sprite.png)' }, //flashlight 
-    { x: widthP(17.5), y: page2 + heightP(40) + heightP(0.5), width: widthP(2.5), height: heightP(5) }, //player1 button 
-    { x: widthP(97.5), y: page2 + heightP(40) + heightP(0.5), width: widthP(2.5), height: heightP(5) }, // player2 button 
+    { x: widthP(1), y: page1 + heightP(0.8), width: widthP(3), height: heightP(8.5) - heightP(0.5), backgroundImage: '/electric-board-sprite.png' },//light switch/board 0
+    { x: widthP(98), y: page1 + heightP(61.7), width: widthP(0.50), height: heightP(1.3), backgroundImage: hasFlashlight? ' ': '/flashlight_1-sprite.png' }, //flashlight 
+    { x: widthP(17.5), y: page2 + heightP(40) + heightP(0.5), width: widthP(2.5), height: heightP(4.5), backgroundImage: '/electric-board-sprite-fliped.png'  }, //player1 button 
+    { x: widthP(97.5), y: page2 + heightP(40) + heightP(0.5), width: widthP(2.5), height: heightP(4.5) , backgroundImage: '/electric-board-sprite-fliped.png' }, // player2 button 
     { x: widthP(22.5), y: page2 + heightP(0.5), width: widthP(0.3), height: heightP(7.5) - heightP(0.5) }, // door 1
     { x: widthP(77.2), y: page2 + heightP(0.5), width: widthP(0.3), height: heightP(7.5) - heightP(0.5) }, // door 2
-    { x: widthP(51), y: page2 + heightP(11), width: widthP(3), height: heightP(3), backgroundImage: 'url(./chair2.png)'  }, //last row seat
-    { x: widthP(51), y: page2 + heightP(19), width: widthP(3), height: heightP(3),backgroundImage: 'url(./chair2.png)'  }, //middle row seat
-    { x: widthP(50), y: page2 + heightP(29), width: widthP(3), height: heightP(3),backgroundImage: 'url(./chair2.png)'  }, //first row seat
-    { x: widthP(83.5), y: page2 + heightP(22), width: widthP(14), height: heightP(6) }, //live
-    { x: widthP(2), y: page2 + heightP(22), width: widthP(14), height: heightP(6) }, //sourcecode
+    { x: widthP(51), y: page2 + heightP(11), width: widthP(3), height: heightP(3), backgroundImage: '/chair2.png'  }, //last row seat
+    { x: widthP(51), y: page2 + heightP(19), width: widthP(3), height: heightP(3),backgroundImage: '/chair2.png'  }, //middle row seat
+    { x: widthP(50), y: page2 + heightP(29), width: widthP(3), height: heightP(3),backgroundImage: '/chair2.png'  }, //first row seat
+    { x: widthP(86), y: page2 + heightP(12), width: widthP(9), height: heightP(18) }, //live
+    { x: widthP(5), y: page2 + heightP(11), width: widthP(9), height: heightP(18) }, //sourcecode
 
   ]
 
@@ -125,9 +144,9 @@ const Game = () => {
     const playerBottom = playerY - playerHeight; // Assuming Y increases downwards
 
     if ((playerRight >= intObjects[0].x && playerX <= intObjects[0].x + intObjects[0].width &&
-      playerBottom <= intObjects[0].y && playerY >= intObjects[0].y - intObjects[0].height) && !lightSwitch) {
+      playerBottom <= intObjects[0].y && playerY >= intObjects[0].y - intObjects[0].height) && !electricBoardSwitch) {
       // optional change the img or add annimations
-      setLightSwitch(true);
+      setElectricBoardSwitch(true);
       scrollOnePage();
       setPlayerX(0);
       setPlayerY(page2 + heightP(95));
@@ -278,10 +297,7 @@ const Game = () => {
         newX = Math.max(borderWidth, playerX - widthP(.8)); // need to test and change
         setFlashlightXDirection(25);// acording to widthP of flashlight
         setFlashlightYDirection(12.5);
-        setFlashlightTransform('scaleX(-1)');// we flip the css then start it at minus widthP
-        setFlashlightBackground('linear-gradient(to right, rgba(255, 255, 255, 0.8) 0%, rgba(0, 0, 0, 0) 100%)');
-        setFlashlightBackground2('linear-gradient(to right, rgba(66, 76, 125, 1) 0%, rgba(0, 0, 0, 0) 100%)')
-        setFlashlightClipPath('polygon(0% 50%, 100% 0%, 100% 100%)');
+      
         advanceFrame('left');
         setCurrentFlashlightFrame('left')
         new2X = Math.min(widthP(100) - playerWidth - borderWidth * 2, player2X + 10);
@@ -290,10 +306,6 @@ const Game = () => {
         newX = Math.min(widthP(100) - playerWidth - borderWidth * 2, playerX + 10);
         setFlashlightXDirection(-0.3);
         setFlashlightYDirection(12.5);
-        setFlashlightTransform('scaleX(1)');
-        setFlashlightBackground('linear-gradient(to right, rgba(255, 255, 255, 0.8) 0%, rgba(0, 0, 0, 0) 100%)');
-        setFlashlightBackground2('linear-gradient(to right, rgba(66, 76, 125, 1) 0%, rgba(0, 0, 0, 0) 100%)')
-        setFlashlightClipPath('polygon(0% 50%, 100% 0%, 100% 100%)')
         advanceFrame('right');
         setCurrentFlashlightFrame('right')
         new2X = Math.max(borderWidth, player2X - 10);
@@ -302,10 +314,6 @@ const Game = () => {
         newY = Math.max(borderWidth, playerY - 10);
         setFlashlightXDirection(12.5);// acording to widthP of flashlight
         setFlashlightYDirection(0);
-        setFlashlightTransform('scaleY(1)');
-        setFlashlightBackground('linear-gradient(to bottom, rgba(255, 255, 255, 0.8) 0%, rgba(0, 0, 0, 0) 100%)');
-        setFlashlightBackground2('linear-gradient(to bottom, rgba(66, 76, 125, 1) 0%, rgba(0, 0, 0, 0) 100%)')
-        setFlashlightClipPath('polygon(50% 0%, 100% 100%, 0% 100%)');
         advanceFrame('down')
         setCurrentFlashlightFrame('down')
         new2Y = Math.min(gameSize.height - playerHeight - borderWidth * 2, player2Y + 10);
@@ -314,10 +322,6 @@ const Game = () => {
         newY = Math.min(gameSize.height - playerHeight - borderWidth * 2, playerY + 10);
         setFlashlightXDirection(12.5);// acording to widthP of flashlight
         setFlashlightYDirection(25);
-        setFlashlightTransform('scaleY(-1)');
-        setFlashlightBackground('linear-gradient(to bottom, rgba(255, 255, 255, 0.8) 0%, rgba(0, 0, 0, 0) 100%)');
-        setFlashlightBackground2('linear-gradient(to bottom, rgba(66, 76, 125, 1) 0%, rgba(0, 0, 0, 0) 100%)')
-        setFlashlightClipPath('polygon(50% 0%, 100% 100%, 0% 100%)');
         advanceFrame('up')
         setCurrentFlashlightFrame('up3')
         new2Y = Math.max(borderWidth, player2Y - 10);
@@ -330,8 +334,8 @@ const Game = () => {
       return (
         newX < platform.x + platform.width &&
         newX + playerWidth > platform.x &&
-        newY < platform.y + platform.height &&
-        newY + playerHeight > platform.y
+        newY < platform.y + platform.height&&
+        newY + playerHeight > platform.y 
       );
     });
 
@@ -380,7 +384,7 @@ const Game = () => {
     return () => {
       clearInterval(gameLoop);
     };
-  }, [playerX, playerY, moveDirection, gameSize, playerWidth, playerHeight, flashlightTransform, flashlightXDirection, currentFrame]);
+  }, [playerX, playerY, moveDirection, gameSize, playerWidth, playerHeight, flashlightXDirection, currentFrame]);
 
   const checkButtonsAndAct = () => {
     // need to remove the timer
@@ -442,34 +446,10 @@ const Game = () => {
   };
 
   return (
-    <div
-      className={"no-scrollbar"}
-      style={{ width: gameSize.width, height: gameSize.height }}
-    >
+    <div className={"no-scrollbar"} style={{ width: gameSize.width, height: gameSize.height }} >
       {/* global */}
 
-      <div
-        style={{
-          position: "absolute",
-          width: gameSize.width,
-          height: gameSize.height,
-          backgroundColor: "rgba(0, 0, 0, 0.00)",
-          maskImage: `url('./flashlight-${toggleFlashlight ? currentflashlightFrame : ""
-            }-sprite.png'), linear-gradient(black, black)`,
-          WebkitMaskImage: `url('./flashlight-${toggleFlashlight ? currentflashlightFrame : ""
-            }-sprite.png'), linear-gradient(black, black)`,
-          maskRepeat: "no-repeat, repeat",
-          WebkitMaskComposite: "destination-out",
-          maskComposite: "exclude",
-          zIndex: "10",
-          maskPosition: `${playerX + playerWidth / 2 - widthP(flashlightXDirection)
-            }px ${gameSize.height -
-            (playerY + playerHeight / 2) -
-            heightP(flashlightYDirection)
-            }px`,
-          maskSize: `${widthP(25)}px ${heightP(25)}px`,
-        }}
-      ></div>
+      <div style={{ position: "absolute", width: gameSize.width, height: gameSize.height, backgroundColor: "rgba(0, 0, 0, 0.00)", maskImage: `url('./flashlight-${toggleFlashlight ? currentFlashlightFrame : "" }-sprite.png'), linear-gradient(black, black)`, WebkitMaskImage: `url('./flashlight-${toggleFlashlight ? currentFlashlightFrame : "" }-sprite.png'), linear-gradient(black, black)`, maskRepeat: "no-repeat, repeat", WebkitMaskComposite: "destination-out", maskComposite: "exclude", zIndex: "10", maskPosition: `${playerX + playerWidth / 2 - widthP(flashlightXDirection) }px ${gameSize.height - (playerY + playerHeight / 2) - heightP(flashlightYDirection) }px`, maskSize: `${widthP(25)}px ${heightP(25)}px`, }} ></div>
 
       {!hasFlashlight && (
         <div
@@ -485,7 +465,7 @@ const Game = () => {
             clipPath: "polygon(0% 50%, 100% 0%, 100% 100%)",
             borderRadius: "50% / 70%",
             pointerEvents: "none",
-            zIndex: 100,
+            zIndex: 11,
           }}
         ></div>
       )}
@@ -506,24 +486,52 @@ const Game = () => {
 
       <Platform platforms={platforms} />
 
-      {intObjects.map((intObject, index) => (
-        <div
-          key={index}
+      {intObjects.map((intObject,index) => (
+        <img key={index}
+          src={intObject.backgroundImage?? '/staircase-sprite.png'} // project img
+          alt="PlayerPhoto1"
           style={{
             position: "absolute",
             left: `${intObject.x}px`,
             bottom: `${intObject.y}px`,
             width: `${intObject.width}px`,
             height: `${intObject.height}px`,
-            backgroundImage: intObject.backgroundImage,
-            backgroundColor: intObject.backgroundImage ? "" : "yellow",
-            backgroundSize: "contain",
-            backgroundRepeat: "no-repeat",
+            zIndex: 1,
           }}
         />
       ))}
       {ladders.map((ladder, index) => (
         <Ladder key={index} {...ladder} />
+      ))}
+
+      {bImages.map((bImage, index) => (
+        <div key={index}
+          style={{
+            position: "absolute",
+            left: `${bImage.x}px`,
+            bottom: `${bImage.y}px`,
+            width: `${bImage.width}px`,
+            height: `${bImage.height}px`,
+            backgroundImage: `${bImage.backgroundImage}`,
+            backgroundRepeat: 'repeat',
+            zIndex: -1,
+          }}
+        />
+      ))}
+
+      {imageProps.map((imageProp, index) => (
+        <img key={index}
+          src={imageProp.backgroundImage ?? '/staircase-sprite.png'} // project img
+          alt="PlayerPhoto1"
+          style={{
+            position: "absolute",
+            left: `${imageProp.x}px`,
+            bottom: `${imageProp.y}px`,
+            width: `${imageProp.width}px`,
+            height: `${imageProp.height}px`,
+            zIndex: `${imageProp.zIndex}`,
+          }}
+        />
       ))}
 
       <PlayerSprite
@@ -534,7 +542,7 @@ const Game = () => {
         scale={(((1.3 * gameSize.height) / 3 + gameSize.width) * 0.01) / 32}
       />
 
-      {
+      
         <img
           src="https://i.pinimg.com/originals/9a/35/d6/9a35d6b50aaea74a80052640850d86d3.png" // PLAYER 2
           alt="Player"
@@ -546,77 +554,9 @@ const Game = () => {
             height: widthP(1.6),
           }}
         />
-      }
+      
 
       {/* page 1 components */}
-
-<div
-  style={{
-    position: "absolute",
-    left: widthP(1),
-    bottom: page1 + heightP(99),
-    width: widthP(98), // Set the desired width
-    height: heightP(1), // Set the desired height
-    backgroundImage: "url('brick-top.png')",
-    backgroundRepeat: 'repeat', // This makes the image repeat
-    zIndex: -1,
-  }}
-/>
-
-<div
-  style={{
-    position: "absolute",
-    left: widthP(0),
-    bottom: page1 + heightP(0),
-    width: widthP(100), // Set the desired width
-    height: heightP(90), // Set the desired height
-    backgroundImage: "url('test-background.png')",
-    backgroundRepeat: 'repeat', // This makes the image repeat
-    zIndex: -1,
-  }}
-/>
-
-<div
-  style={{
-    position: "absolute",
-    left: widthP(99),
-    bottom: page1 + heightP(0),
-    width: widthP(1), // Set the desired width
-    height: heightP(100), // Set the desired height
-    backgroundImage: "url('brick-right.png')",
-    backgroundRepeat: 'repeat', // This makes the image repeat
-    zIndex: -1,
-  }}
-/>
-
-
-<div
-  style={{
-    position: "absolute",
-    left: widthP(0),
-    bottom: page1 + heightP(0),
-    width: widthP(1), // Set the desired width
-    height: heightP(100), // Set the desired height
-    backgroundImage: "url('brick-left.png')",
-    backgroundRepeat: 'repeat', // This makes the image repeat
-    zIndex: -1,
-  }}
-/>
-
-
-
-<div
-  style={{
-    position: "absolute",
-    left: widthP(1),
-    bottom: page1 + heightP(90),
-    width: widthP(98), // Set the desired width
-    height: heightP(9), // Set the desired height
-    backgroundImage: "url('page-one-top-middle-background.png')",
-    backgroundRepeat: 'repeat', // This makes the image repeat
-    zIndex: -1,
-  }}
-/>
 
       <h1
         style={{
@@ -667,30 +607,7 @@ const Game = () => {
         Contact
       </h3>
 
-      <img
-        src="./Frame_C-Wood_03-256x256.png" // project img
-        alt="PlayerPhoto1"
-        style={{
-          position: "absolute",
-          left: widthP(10),
-          bottom: page1 + heightP(45),
-          width: widthP(19),
-          height: heightP(35),
-        }}
-      />
-
-      <img
-        src="./Frame_C-Wood_03-256x256.png" // project img
-        alt="PlayerPhoto2"
-        style={{
-          position: "absolute",
-          left: widthP(69),
-          bottom: page1 + heightP(30),
-          width: widthP(30),
-          height: heightP(20),
-        }}
-      />
-
+     {/* test components */}
       <img
         src="./hanging-thing-sprite.png" // project img
         alt="PlayerPhoto2"
@@ -751,116 +668,26 @@ const Game = () => {
         }}
       />
 
-      <div
-        style={{
-          position: "absolute",
-          left: widthP(0),
-          bottom: page2 + heightP(40),
-          width: widthP(100), // Set the desired width
-          height: heightP(60), // Set the desired height
-          backgroundImage: "url('sprite-0009.png')",
-          backgroundRepeat: 'repeat', // This makes the image repeat
-          zIndex: -1,
-        }}
-      />
-
-      <img
-        src="./carpet5.png" // project img
-        alt="PlayerPhoto1"
-        style={{
-          position: "absolute",
-          left: widthP(19),
-          bottom: page2 + heightP(0),
-          width: widthP(62), // Set the desired width
-          height: heightP(40), // Set the desired height
-          zIndex: -1,
-        }}
-      />
-
-      <img
-        src="./sun.png" // project img
-        alt="PlayerPhoto1"
-        style={{
-          position: "absolute",
-          left: widthP(0),
-          bottom: page2 + heightP(0),
-          width: widthP(19), // Set the desired width
-          height: heightP(40), // Set the desired height
-          zIndex: -1,
-        }}
-      />
-
-      <img
-        src="./moon.png" // project img
-        alt="PlayerPhoto1"
-        style={{
-          position: "absolute",
-          left: widthP(81),
-          bottom: page2 + heightP(0),
-          width: widthP(19), // Set the desired width
-          height: heightP(40), // Set the desired height
-          zIndex: -1,
-        }}
-      />
-
       {playerOneButton && playerTwoButton && (
         <>
-          <p
-            style={{
-              position: "absolute",
-              left: widthP(87.5),
-              bottom: page2 + heightP(19),
-              width: widthP(10),
-              height: heightP(5),
-            }}
-          >
-           See Live
-          </p>
-          <p
-            style={{
-              position: "absolute",
-              left: widthP(5),
-              bottom: page2 + heightP(19),
-              width: widthP(10),
-              height: heightP(5),
-            }}
-          >
-          
-            Source code
-          </p>
+          <p style={{ position: "absolute", left: widthP(87.5), bottom: page2 + heightP(19), width: widthP(10), height: heightP(5), }} > See Live </p>
+          <p style={{ position: "absolute", left: widthP(5), bottom: page2 + heightP(19), width: widthP(10), height: heightP(5), }} > Source code </p>
         </>
       )}
 
       {/* page3 components */}
 
-      <p
-        style={{
-          position: "absolute",
-          left: widthP(30),
-          bottom: page3 + heightP(60),
-          width: widthP(60),
-          height: widthP(1.6),
-        }}
-      >
-        {" Thank you so much for playing my game/viewing my portfolio/visiting my website/waisting your time "}
-      </p>
-
-      <p
-        style={{
-          position: "absolute",
-          left: widthP(30),
-          bottom: page3 + heightP(50),
-          width: widthP(60),
-          height: widthP(1.6),
-        }}
-      >
-        {"Im proud of you and dont let anyone else ever tell you otherwise, we are almost there; keep going"}
-      </p>
+      <p style={{ position: "absolute", left: widthP(30), bottom: page3 + heightP(60), width: widthP(60), height: widthP(1.6), }} > 
+      {" Thank you so much for playing my game/viewing my portfolio/visiting my website/waisting your time "} </p>
+      <p style={{ position: "absolute", left: widthP(30), bottom: page3 + heightP(50), width: widthP(60), height: widthP(1.6), }} > 
+      {"Im proud of you and dont let anyone else ever tell you otherwise, we are almost there; keep going"} </p>
     </div>
   );
 };
 
 export default Game;
+
+// fix border width problem bro
 
 //page 1 work-
  /*make text white.
