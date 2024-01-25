@@ -1,6 +1,6 @@
 import React from 'react';
 
-const frameWidth = 32; // Width of one frame
+const frameWidth = 16; // Width of one frame
 const frameHeight = 32; // Height of one frame
 const PlayerSprite = ({ playerX, playerY, moveDirection, frameIndex, scale }) => {
   // Calculate the X and Y position of the sprite image based on direction and frame index
@@ -29,10 +29,11 @@ const PlayerSprite = ({ playerX, playerY, moveDirection, frameIndex, scale }) =>
         bottom: `${playerY}px`,
         width: `${frameWidth}px`,
         height: `${frameHeight}px`,
-        backgroundImage: `url(./temps.png)`,
+        backgroundImage: `url(./temp-edit.png)`,
         backgroundPosition: `${backgroundPositionX}px ${backgroundPositionY}px`,
         backgroundRepeat: 'no-repeat',
-        transform: `scale(${scale})`
+        transform: `scale(${scale})`,
+        zIndex: 11,
       }}
     />
   );

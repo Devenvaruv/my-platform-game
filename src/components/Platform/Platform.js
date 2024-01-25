@@ -14,8 +14,8 @@ export const generatePlatforms = (widthP, heightP, page1, page2, page3) => {
   return [
     // page 1
     { x: widthP(0), y: page1 + heightP(0), width: widthP(100), height: heightP(1), backgroundImage: 'url(./border-sprite.png)' }, // base
-    { x: widthP(0), y: page1 + heightP(90), width: widthP(75), height: heightP(0.5), backgroundImage: 'url(./border-sprite.png)'  }, // header part 1
-    { x: widthP(77.5), y: page1 + heightP(90), width: widthP(22.5), height: heightP(0.5), backgroundImage: 'url(./border-sprite.png)'  }, // header part 2
+    { x: widthP(0), y: page1 + heightP(90), width: widthP(75), height: heightP(0.5), backgroundImage: 'url(./border-sprite.png)',zIndex: 12  }, // header part 1
+    { x: widthP(77.5), y: page1 + heightP(90), width: widthP(22.5), height: heightP(0.5), backgroundImage: 'url(./border-sprite.png)',zIndex: 12  }, // header part 2
     { x: widthP(70), y: page1 + heightP(60), width: widthP(30), height: heightP(0.5), backgroundImage: 'url(./border-sprite.png)'  }, // ladder base
 
     // page 2
@@ -37,25 +37,25 @@ export const generatePlatforms = (widthP, heightP, page1, page2, page3) => {
     
     // page 2 last row seats
   
-    { x: widthP(26), y: page2 + heightP(11), width: widthP(3), height: heightP(3) , backgroundImage: '/chair2.png' },
+    { x: widthP(26), y: page2 + heightP(11), width: widthP(2.5), height: heightP(3) , backgroundImage: '/person-chair.png' },
 
-    { x: widthP(31), y: page2 + heightP(11), width: widthP(3), height: heightP(3) , backgroundImage: '/chair2.png'  },
+    { x: widthP(31), y: page2 + heightP(11), width: widthP(2.5), height: heightP(3) , backgroundImage: '/person-chair.png'  },
    
-    { x: widthP(36), y: page2 + heightP(11), width: widthP(3), height: heightP(3) , backgroundImage: '/chair2.png'  },
+    { x: widthP(36), y: page2 + heightP(11), width: widthP(2.5), height: heightP(3) , backgroundImage: '/person-chair.png'  },
 
-    { x: widthP(41), y: page2 + heightP(11), width: widthP(3), height: heightP(3) , backgroundImage: '/chair2.png'  },
+    { x: widthP(41), y: page2 + heightP(11), width: widthP(2.5), height: heightP(3) , backgroundImage: '/person-chair.png'  },
 
-    { x: widthP(46), y: page2 + heightP(11), width: widthP(3), height: heightP(3) , backgroundImage: '/chair2.png'  },
+    { x: widthP(46), y: page2 + heightP(11),width: widthP(2.5),height: heightP(3) , backgroundImage: '/person-chair.png'  },
    
-    { x: widthP(51), y: page2 + heightP(11), width: widthP(3), height: heightP(0.2)},
+    { x: widthP(51), y: page2 + heightP(11), width: widthP(2.5), height: heightP(0.2)},
 
-    { x: widthP(56), y: page2 + heightP(11), width: widthP(3), height: heightP(3) , backgroundImage: '/chair2.png'  },
+    { x: widthP(56), y: page2 + heightP(11),width: widthP(2.5), height: heightP(3) , backgroundImage: '/person-chair.png'  },
 
-    { x: widthP(61), y: page2 + heightP(11), width: widthP(3), height: heightP(3)  , backgroundImage: '/chair2.png' },
+    { x: widthP(61), y: page2 + heightP(11), width: widthP(2.5), height: heightP(3)  , backgroundImage: '/person-chair.png' },
 
-    { x: widthP(66), y: page2 + heightP(11), width: widthP(3), height: heightP(3) , backgroundImage: '/chair2.png'  },
+    { x: widthP(66), y: page2 + heightP(11), width: widthP(2.5), height: heightP(3) , backgroundImage: '/person-chair.png'  },
 
-    { x: widthP(71), y: page2 + heightP(11), width: widthP(3), height: heightP(3) , backgroundImage: '/chair2.png'  },
+    { x: widthP(71), y: page2 + heightP(11), width: widthP(2.5), height: heightP(3) , backgroundImage: '/person-chair.png'  },
 
 
     // barrier between seats//////////////////////////////////////////////////////////////////////////////////////////
@@ -67,21 +67,21 @@ export const generatePlatforms = (widthP, heightP, page1, page2, page3) => {
 
     // // page 2 middle row seats 1
    
-    { x: widthP(31), y: page2 + heightP(19), width: widthP(3), height: heightP(3) , backgroundImage: '/chair2.png'  },
+    { x: widthP(31), y: page2 + heightP(19), width: widthP(2.5), height: heightP(3) , backgroundImage: '/person-chair.png'  },
 
-    { x: widthP(36), y: page2 + heightP(19), width: widthP(3), height: heightP(3) , backgroundImage: '/chair2.png'  },
+    { x: widthP(36), y: page2 + heightP(19), width: widthP(2.5), height: heightP(3) , backgroundImage: '/person-chair.png'  },
 
-    { x: widthP(41), y: page2 + heightP(19), width: widthP(3), height: heightP(3) , backgroundImage: '/chair2.png'  },
+    { x: widthP(41), y: page2 + heightP(19), width: widthP(2.5), height: heightP(3) , backgroundImage: '/person-chair.png'  },
 
-    { x: widthP(46), y: page2 + heightP(19), width: widthP(3), height: heightP(3) , backgroundImage: '/chair2.png'  },
+    { x: widthP(46), y: page2 + heightP(19), width: widthP(2.5), height: heightP(3) , backgroundImage: '/person-chair.png'  },
 
-    { x: widthP(51), y: page2 + heightP(19), width: widthP(3), height: heightP(0.2)},
+    { x: widthP(51), y: page2 + heightP(19), width: widthP(2.5), height: heightP(0.2)},
 
-    { x: widthP(56), y: page2 + heightP(19), width: widthP(3), height: heightP(3) , backgroundImage: '/chair2.png'  },
+    { x: widthP(56), y: page2 + heightP(19), width: widthP(2.5), height: heightP(3) , backgroundImage: '/person-chair.png'  },
 
-    { x: widthP(61), y: page2 + heightP(19), width: widthP(3), height: heightP(3) , backgroundImage: '/chair2.png'  },
+    { x: widthP(61), y: page2 + heightP(19), width: widthP(2.5), height: heightP(3) , backgroundImage: '/person-chair.png'  },
 
-    { x: widthP(66), y: page2 + heightP(19), width: widthP(3), height: heightP(3) , backgroundImage: '/chair2.png'  },
+    { x: widthP(66), y: page2 + heightP(19), width: widthP(2.5), height: heightP(3) , backgroundImage: '/person-chair.png'  },
 
    
 
@@ -95,14 +95,14 @@ export const generatePlatforms = (widthP, heightP, page1, page2, page3) => {
 
     // page 2 first row seats - 1
    
-    { x: widthP(33), y: page2 + heightP(29), width: widthP(3), height: heightP(3) , backgroundImage: '/chair2.png'  },
-    { x: widthP(37), y: page2 + heightP(29), width: widthP(3), height: heightP(3) , backgroundImage: '/chair2.png'  },
+    { x: widthP(33), y: page2 + heightP(29), width: widthP(2.5), height: heightP(3) , backgroundImage: '/person-chair.png'  },
+    { x: widthP(37), y: page2 + heightP(29), width: widthP(2.5), height: heightP(3) , backgroundImage: '/person-chair.png'  },
 
-    { x: widthP(46), y: page2 + heightP(29), width: widthP(3), height: heightP(3) , backgroundImage: '/chair2.png'  },
-    { x: widthP(50), y: page2 + heightP(29), width: widthP(3), height: heightP(0.2)},
+    { x: widthP(46), y: page2 + heightP(29), width: widthP(2.5), height: heightP(3) , backgroundImage: '/person-chair.png'  },
+    { x: widthP(50), y: page2 + heightP(29), width: widthP(2.5), height: heightP(0.2)},
 
-    { x: widthP(60), y: page2 + heightP(29), width: widthP(3), height: heightP(3) , backgroundImage: '/chair2.png'  },
-    { x: widthP(64), y: page2 + heightP(29), width: widthP(3), height: heightP(3) , backgroundImage: '/chair2.png'  },
+    { x: widthP(60), y: page2 + heightP(29), width: widthP(2.5), height: heightP(3) , backgroundImage: '/person-chair.png'  },
+    { x: widthP(64), y: page2 + heightP(29), width: widthP(2.5), height: heightP(3) , backgroundImage: '/person-chair.png'  },
 
 
     // maze player1 - part-Y 1
@@ -192,6 +192,7 @@ const Platform = ({ platforms }) => {
               backgroundImage: platform.backgroundImage,
               backgroundSize: 'contain',
               backgroundRepeat: 'repeat',
+              zIndex: platform.zIndex ?? 1,
             }}
           /> : <img key={index}
             src={platform.backgroundImage}

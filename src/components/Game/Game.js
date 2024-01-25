@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Ladder from '../Ladder/Ladder';
 import Platform, { generatePlatforms } from '../Platform/Platform';
 import PlayerSprite from '../PlayerSprite/PlayerSprite';
+import PopcornText from '../popcornText/popcornText';
 
 import './Game.css'
 
@@ -17,7 +18,7 @@ const Game = () => {
   const [playerDimensions, setPlayerDimensions] = useState((((1.3 * gameSize.height / 3) + (gameSize.width)) * 0.01) / 32);
   const playerWidth = 32 * playerDimensions;// need to decide how much
   const playerHeight = 32 * playerDimensions;// need to decide how much
-  const [playerX, setPlayerX] = useState(widthP(23));// starting position
+  const [playerX, setPlayerX] = useState(widthP(21));// starting position
   const [playerY, setPlayerY] = useState(page1 + heightP(91));
   const [player2X, setPlayer2X] = useState(widthP(97));
   const [player2Y, setPlayer2Y] = useState(page2 + heightP(95));
@@ -43,10 +44,10 @@ const Game = () => {
   const [currentFlashlightFrame, setCurrentFlashlightFrame] = useState('left');
 
   const directionFrameMap = {
-    right: 0, // Frames 0 to 3
-    up: 4,   // Frames 4 to 7
-    left: 8, // Frames 8 to 11
-    down: 12  // Frames 12 to 15
+    right: 6, // Frames 6 to 8
+    up: 9,   // Frames 9 to 11
+    left: 3, // Frames 3 to 5
+    down: 0  // Frames 0 to 2
   };
 
   const platforms = generatePlatforms(widthP, heightP, page1, page2, page3);
@@ -105,11 +106,11 @@ const Game = () => {
 
   const bImages = [
     //page 1
-    { x: widthP(1), y: page1 + heightP(99), width: widthP(98), height: heightP(1), backgroundImage: "url('brick-top.png')" },
+    { x: widthP(0), y: page1 + heightP(99), width: widthP(100), height: heightP(1), backgroundImage: "url('brick-top.png')" , zIndex: 11},
     { x: widthP(0), y: page1 + heightP(0), width: widthP(100), height: heightP(90), backgroundImage: "url('test-background.png')" },
     { x: widthP(99), y: page1 + heightP(0), width: widthP(1), height: heightP(100), backgroundImage: "url('brick-right.png')" }, 
     { x: widthP(0), y: page1 + heightP(0), width: widthP(1), height: heightP(100), backgroundImage: "url('brick-left.png')" },
-    { x: widthP(1), y: page1 + heightP(90), width: widthP(98), height: heightP(9), backgroundImage: "url('page-one-top-middle-background.png')" },
+    { x: widthP(0), y: page1 + heightP(90), width: widthP(100), height: heightP(9), backgroundImage: "url('page-one-top-middle-background.png')", zIndex: 11},
     //page2
     { x: widthP(0), y: page2 + heightP(40), width: widthP(100), height: heightP(60), backgroundImage: "url('sprite-0009.png')" },
 
@@ -130,9 +131,9 @@ const Game = () => {
     { x: widthP(97.5), y: page2 + heightP(40) + heightP(0.5), width: widthP(2.5), height: heightP(4.5) , backgroundImage: '/electric-board-sprite-fliped.png' }, // player2 button 
     { x: widthP(22.5), y: page2 + heightP(0.5), width: widthP(0.3), height: heightP(7.5) - heightP(0.5) }, // door 1
     { x: widthP(77.2), y: page2 + heightP(0.5), width: widthP(0.3), height: heightP(7.5) - heightP(0.5) }, // door 2
-    { x: widthP(51), y: page2 + heightP(11), width: widthP(3), height: heightP(3), backgroundImage: '/chair2.png'  }, //last row seat
-    { x: widthP(51), y: page2 + heightP(19), width: widthP(3), height: heightP(3),backgroundImage: '/chair2.png'  }, //middle row seat
-    { x: widthP(50), y: page2 + heightP(29), width: widthP(3), height: heightP(3),backgroundImage: '/chair2.png'  }, //first row seat
+    { x: widthP(51), y: page2 + heightP(11), width: widthP(2.5), height: heightP(3), backgroundImage: '/chair2.png'  }, //last row seat
+    { x: widthP(51), y: page2 + heightP(19), width: widthP(2.5), height: heightP(3),backgroundImage: '/chair2.png'  }, //middle row seat
+    { x: widthP(50), y: page2 + heightP(29), width: widthP(2.5), height: heightP(3),backgroundImage: '/chair2.png'  }, //first row seat
     { x: widthP(86), y: page2 + heightP(12), width: widthP(9), height: heightP(18) }, //live
     { x: widthP(5), y: page2 + heightP(11), width: widthP(9), height: heightP(18) }, //sourcecode
 
@@ -227,7 +228,7 @@ const Game = () => {
       // Find the starting frame for the current direction
       const startFrame = directionFrameMap[direction];
       // Calculate the next frame in the current animation sequence
-      const nextFrame = startFrame + ((prevFrame - startFrame + 1) % 4);
+      const nextFrame = startFrame + ((prevFrame - startFrame + 1) % 3);
       return nextFrame;
     });
   };
@@ -447,9 +448,10 @@ const Game = () => {
 
   return (
     <div className={"no-scrollbar"} style={{ width: gameSize.width, height: gameSize.height }} >
+
       {/* global */}
 
-      <div style={{ position: "absolute", width: gameSize.width, height: gameSize.height, backgroundColor: "rgba(0, 0, 0, 0.00)", maskImage: `url('./flashlight-${toggleFlashlight ? currentFlashlightFrame : "" }-sprite.png'), linear-gradient(black, black)`, WebkitMaskImage: `url('./flashlight-${toggleFlashlight ? currentFlashlightFrame : "" }-sprite.png'), linear-gradient(black, black)`, maskRepeat: "no-repeat, repeat", WebkitMaskComposite: "destination-out", maskComposite: "exclude", zIndex: "10", maskPosition: `${playerX + playerWidth / 2 - widthP(flashlightXDirection) }px ${gameSize.height - (playerY + playerHeight / 2) - heightP(flashlightYDirection) }px`, maskSize: `${widthP(25)}px ${heightP(25)}px`, }} ></div>
+      <div style={{ position: "absolute", width: gameSize.width, height: gameSize.height, backgroundColor: "rgba(0, 0, 0, 0.0)", maskImage: `url('./flashlight-${toggleFlashlight ? currentFlashlightFrame : "" }-sprite.png'), linear-gradient(black, black)`, WebkitMaskImage: `url('./flashlight-${toggleFlashlight ? currentFlashlightFrame : "" }-sprite.png'), linear-gradient(black, black)`, maskRepeat: "no-repeat, repeat", WebkitMaskComposite: "destination-out", maskComposite: "exclude", zIndex: "10", maskPosition: `${playerX + playerWidth / 2 - widthP(flashlightXDirection) }px ${gameSize.height - (playerY + playerHeight / 2) - heightP(flashlightYDirection) }px`, maskSize: `${widthP(25)}px ${heightP(25)}px`, }} ></div>
 
       {!hasFlashlight && (
         <div
@@ -514,7 +516,7 @@ const Game = () => {
             height: `${bImage.height}px`,
             backgroundImage: `${bImage.backgroundImage}`,
             backgroundRepeat: 'repeat',
-            zIndex: -1,
+            zIndex: bImage.zIndex ?? -1,
           }}
         />
       ))}
@@ -544,16 +546,18 @@ const Game = () => {
 
       
         <img
-          src="https://i.pinimg.com/originals/9a/35/d6/9a35d6b50aaea74a80052640850d86d3.png" // PLAYER 2
+          src="/naked_char.png" // PLAYER 2
           alt="Player"
           style={{
             position: "absolute",
             left: `${player2X}px`,
             bottom: `${player2Y}px`,
-            width: widthP(1.6),
-            height: widthP(1.6),
+            width: 16,
+            height: 32,
+            transform: `scale(${(((1.3 * gameSize.height) / 3 + gameSize.width) * 0.01) / 32})`
           }}
         />
+        
       
 
       {/* page 1 components */}
@@ -566,6 +570,8 @@ const Game = () => {
           fontSize: widthP(2),
           height: heightP(0.1),
           lineHeight: heightP(0.1),
+          color: 'white',
+          zIndex: 13,
         }}
       >
         DevWeber
@@ -578,6 +584,8 @@ const Game = () => {
           fontSize: widthP(1),
           height: heightP(0.1),
           lineHeight: heightP(0.1),
+          color: 'white',
+          zIndex: 13,
         }}
       >
         Home
@@ -590,6 +598,8 @@ const Game = () => {
           fontSize: widthP(1),
           height: heightP(0.1),
           lineHeight: heightP(0.1),
+          color: 'white',
+          zIndex: 13,
         }}
       >
         Work
@@ -602,10 +612,47 @@ const Game = () => {
           fontSize: widthP(1),
           height: heightP(0.1),
           lineHeight: heightP(0.1),
+          color: 'white',
+          zIndex: 13,
         }}
       >
         Contact
       </h3>
+
+      {cinnemaMode && <>
+        <div
+        style={{
+          position: 'absolute', // Use 'relative', 'absolute', or 'fixed' depending on your layout needs
+          left: widthP(33), // X coordinate
+          bottom: page2 + heightP(33), // Y coordinate
+          backgroundColor: '#333', // Background color of the div
+          color: 'white', // Text color
+          padding: '5px', // Space inside the div, around the text
+          borderRadius: '10px', // Rounded corners
+          border: '2px solid #555', // Border around the div
+          maxWidth: widthP(20), // Maximum width of the div
+          boxSizing: 'border-box', // Makes sure padding doesn't add to the width
+          fontSize: widthP(0.4),
+          lineHeight: heightP(0.2),
+          zIndex: 1000, // Ensure the div is above other elements
+        }}
+      >
+        <PopcornText text="I  heard it was made with React" typingSpeed={100} startTyping={true} />
+      </div>
+      <div style={{
+        content: '',
+        position: 'absolute',
+        left: widthP(33.5),
+        bottom: page2 + heightP(31.5), // Position the triangle 'tail' above the bottom of the dialogue box
+        borderWidth: heightP(1), // Size of the 'tail'
+        borderStyle: 'solid',
+        borderColor: '#333 transparent transparent transparent', // Match the dialogue box color
+        zIndex: 1111, // Ensure the tail is just below the dialogue box
+      }}></div>
+      
+      
+      
+      </>}
 
      {/* test components */}
       <img
@@ -665,6 +712,7 @@ const Game = () => {
           bottom: page2 + heightP(40 + 0.5),
           width: widthP(60 - 0.3),
           height: cinnemaMode ? heightP(55) : heightP(60 - 0.5),
+          zIndex: cinnemaMode ? 1000 : -1,
         }}
       />
 
