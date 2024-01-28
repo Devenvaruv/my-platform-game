@@ -116,8 +116,8 @@ export const generatePlatforms = (widthP, heightP, page1, page2, page3) => {
     { x: widthP(10), y: page2 + heightP(95), width: widthP(0.3), height: heightP(5), backgroundImage: 'url(./page2-test2.png)'   },
     // part-Y 3
     { x: widthP(15), y: page2 + heightP(55), width: widthP(0.3), height: heightP(10), backgroundImage: 'url(./page2-test2.png)'   },
-    { x: widthP(15), y: page2 + heightP(75), width: widthP(0.3), height: heightP(5), backgroundImage: 'url(./page2-test2.png)'   },
-    { x: widthP(15), y: page2 + heightP(90), width: widthP(0.3), height: heightP(5), backgroundImage: 'url(./page2-test2.png)'   },
+    { x: widthP(15), y: page2 + heightP(76), width: widthP(0.3), height: heightP(4), backgroundImage: 'url(./page2-test2.png)'   },
+    { x: widthP(15), y: page2 + heightP(91), width: widthP(0.3), height: heightP(4), backgroundImage: 'url(./page2-test2.png)'   },
 
     // maze player1 - part-X
     { x: widthP(10), y: page2 + heightP(45), width: widthP(10), height: heightP(0.5), backgroundImage: 'url(./page2-test.png)' },
@@ -168,8 +168,8 @@ export const generatePlatforms = (widthP, heightP, page1, page2, page3) => {
     { x: widthP(90), y: page2 + heightP(95), width: widthP(5), height: heightP(0.5), backgroundImage: 'url(./page2-test.png)'  },
 
     // page 3
-    { x: widthP(5), y: page3 + heightP(30), width: widthP(90), height: widthP(0.3) }, //middle platforn
-    { x: widthP(0), y: page3 + heightP(0), width: widthP(100), height: heightP(0.6) },// base
+    { x: widthP(5), y: page3 + heightP(25), width: widthP(90), height: widthP(0.3), backgroundImage: 'url(./brick-top.png)'}, //middle platforn
+    { x: widthP(0), y: page3 + heightP(0), width: widthP(100), height: heightP(0.6), backgroundImage: 'url(./brick-top.png)' },// base
 
     ...staircasePlatforms
   ];

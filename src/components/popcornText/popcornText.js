@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 
-const PopcornText = ({ text, typingSpeed, startTyping }) => {
+const PopcornText = ({ text, typingSpeed, startTyping, onTypingComplete }) => {
     const [displayedText, setDisplayedText] = useState('');
 
     useEffect(() => {
         if (!startTyping || text.length === 0) {
-            return; // Do nothing if startTyping is false or text is empty
+            return; 
         }
 
-        setDisplayedText(''); // Reset text when startTyping becomes true
+        setDisplayedText('');
         let index = 0;
 
         const timeoutId = setInterval(() => {
@@ -17,11 +17,12 @@ const PopcornText = ({ text, typingSpeed, startTyping }) => {
                 index++;
             } else {
                 clearInterval(timeoutId);
+                if (onTypingComplete) onTypingComplete();
             }
         }, typingSpeed);
 
-        return () => clearInterval(timeoutId); // Cleanup function
-    }, [text, typingSpeed, startTyping]); // Add startTyping to the dependency array
+        return () => clearInterval(timeoutId);
+    }, [text, typingSpeed, startTyping, onTypingComplete]);
 
     return <div>{displayedText}</div>;
 }
