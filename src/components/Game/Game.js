@@ -132,7 +132,7 @@ const Game = () => {
     { x: widthP(0), y: page1 + heightP(0), width: widthP(1), height: heightP(100), backgroundImage: "url('brick-left.png')" },
     { x: widthP(0), y: page1 + heightP(90), width: widthP(100), height: heightP(9), backgroundImage: "url('page-one-top-middle-background.png')", zIndex: 11},
     //page2
-    { x: widthP(0), y: page2 + heightP(40), width: widthP(100), height: heightP(60), backgroundImage: "url('sprite-0009.png')" },
+    { x: widthP(0), y: page2 + heightP(40), width: widthP(100), height: heightP(60), backgroundImage: "url('page2_background.png')" },
 
   ]
 
