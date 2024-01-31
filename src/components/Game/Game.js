@@ -63,6 +63,22 @@ const Game = () => {
   const [pIntro, setPIntro] = useState("Hello!👋 I'm Deven, a web🕸️ developer in SF");
   
 
+
+  useEffect(() => {
+    // Prevent scrolling function
+    const preventScroll = (event) => {
+      event.preventDefault();
+    };
+
+    // Add event listener for wheel event
+    window.addEventListener('wheel', preventScroll, { passive: false });
+
+    // Cleanup function to remove event listener
+    return () => {
+      window.removeEventListener('wheel', preventScroll);
+    };
+  }, []);
+  
   const directionFrameMap = {
     right: 6, // Frames 6 to 8
     up: 9,   // Frames 9 to 11
